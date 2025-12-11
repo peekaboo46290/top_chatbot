@@ -1,3 +1,4 @@
+import re
 import json
 import fitz  
 from typing import List
@@ -9,25 +10,6 @@ from loader import Theorem
 class BaseLogger:
     def __init__(self) -> None:
         self.info = print
-
-def extract_title_and_question(input_string:str):
-    lines = input_string.strip().split('\n')
-    
-    title = ""
-    question = ""
-    is_question = False
-    
-    for line in lines:
-        if line.startswith("Title:"):
-            title = line.split("Title: ", 1)[1].strip()
-        elif line.startswith("Question:"):
-            question +=  line.split("Question: ", 1)[1].strip()
-            is_question = True
-        elif is_question:
-            question += "\n" + line.strip()
-
-    return title, question
-
 
 def read_pdf_pymupdf(pdf_path: str) -> str:
     text = ""
@@ -52,7 +34,7 @@ def initialize_smth(driver, logger= BaseLogger()):
             logger.info(f"Schema element already exists or error: {e}")
 
 
-def extract_from_text(chain, text: str, logger= BaseLogger()) -> List[Theorem]:
+def extract_from_text(llm_chain, text: str, logger= BaseLogger()) -> List[Theorem]:
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=2500,
         chunk_overlap=250,
@@ -66,27 +48,28 @@ def extract_from_text(chain, text: str, logger= BaseLogger()) -> List[Theorem]:
     all_theorems = []
     for i, chunk in enumerate(chunks, 1):
         logger.info(f"Processing chunk {i}/{len(chunks)}")
-        theorems = extract_from_chunk(chain, chunk)
+        theorems = extract_from_chunk(llm_chain= llm_chain,chunk= chunk, logger= logger)
         all_theorems.extend(theorems)
         logger.info(f"Extracted {len(theorems)} theorems from chunk {i}")
     
-    # Remove duplicates based on name
+    
     unique_theorems = {t.name: t for t in all_theorems}.values()
     logger.info(f"Total unique theorems extracted: {len(unique_theorems)}")
     
     return list(unique_theorems)
 
-def extract_from_chunk(chain, chunk: str, logger= BaseLogger()) -> List[Theorem]:
+
+def extract_from_chunk(llm_chain, chunk: str, logger= BaseLogger()) -> List[Theorem]:
         try:
-            response = chain.run(text=chunk)
-            return parse_response(response, logger)
+            response = llm_chain.run(text=chunk)
+            return parse_response(response= response,logger= logger)
         except Exception as e:
             logger.error(f"Error extracting from chunk: {e}")
             return []
 
+
 def parse_response(response:str, logger= BaseLogger()):
     try:
-        import re
         json_match = re.search(r'\{.*\}', response, re.DOTALL)
         if not json_match:
             logger.warning("No JSON found in response")
@@ -108,5 +91,5 @@ def parse_response(response:str, logger= BaseLogger()):
         logger.error(f"JSON parsing error: {e}")
         return []
     except Exception as e:
-        logger.error(f"Unexpected error parsing response: {e}")
+        logger.error(f"Error parsing response: {e}")
         return []

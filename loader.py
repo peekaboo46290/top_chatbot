@@ -7,7 +7,7 @@ from pydantic import BaseModel, Field
 from langchain_neo4j import Neo4jGraph
 from langchain_core.prompts import PromptTemplate
 from langchain.chains import LLMChain
-from langchain_comunity.llms import Ollama
+from langchain_ollama.llms import OllamaLLM
 from streamlit.logger import get_logger
 
 from utils import initialize_smth, read_pdf_pymupdf, parse_response
@@ -67,7 +67,7 @@ embeddings, dimension = load_embedding_model(
     config={"ollama_base_url": ollama_base_url, "llm" : llm_name}, logger=logger
 )
 
-llm = Ollama(
+llm = OllamaLLM(
     model = llm_name,
     base_url = ollama_base_url,
     temperature=0,
