@@ -2,7 +2,6 @@ import os
 from typing import List, Dict, Any
 from dotenv import load_dotenv
 
-from pydantic import BaseModel
 
 from langchain_neo4j import Neo4jGraph
 from langchain_core.prompts import PromptTemplate
@@ -12,7 +11,7 @@ import logging
 
 from utils import initialize_smth, read_pdf_pymupdf, extract_from_text
 from chains import load_embedding_model, load_llm
-
+from theorem import Theorem
 
 load_dotenv(".env")
 
@@ -83,16 +82,6 @@ initialize_smth(neo4j_graph)
 logger.info("Successfully connected to Neo4j")
 
 
-#creating class for theorem
-
-class Theorem(BaseModel):
-    name:str
-    statement: str
-    proof: str = "Not provided"
-    subject:str #alg or anl ...
-    domain: str #top or cal..
-    dependencies: List[str]
-    t_type:str #lemme or prop ...     
 
 
 def add_theorem(theorem:Theorem):

@@ -5,7 +5,7 @@ from typing import List
 
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-from loader import Theorem
+from theorem import Theorem
 
 class BaseLogger:
     def __init__(self) -> None:
