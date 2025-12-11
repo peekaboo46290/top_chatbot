@@ -4,3 +4,4 @@ langchain_neo4j
 dotenv
 pydantic
 streamlit
+PyMuPDF

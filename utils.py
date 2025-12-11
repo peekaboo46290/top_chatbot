@@ -1,3 +1,5 @@
+import fitz  
+
 class BaseLogger:
     def __init__(self) -> None:
         self.info = print
@@ -21,6 +23,13 @@ def extract_title_and_question(input_string:str):
     return title, question
 
 
+def read_pdf_pymupdf(pdf_path: str) -> str:
+    text = ""
+    doc = fitz.open(pdf_path)
+    for page in doc:
+        text += page.get_text() + "\n\n"
+    doc.close()
+    return text
 
 
 def initialize_smth(driver, logger= BaseLogger()):

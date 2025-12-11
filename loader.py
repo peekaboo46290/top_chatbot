@@ -4,16 +4,16 @@ from dotenv import load_dotenv
 
 from pydantic import BaseModel, Field
 
-from docling.document_converter import DocumentConverter
+
 from langchain_neo4j import Neo4jGraph
+from langchain_core.prompts import PromptTemplate
 import streamlit as st
 from streamlit.logger import get_logger
 
-from utils import initialize_smth
+from utils import initialize_smth, read_pdf_pymupdf
 from chains import load_embedding_model
 
-input_path = "./input/"
-converter = DocumentConverter()
+input_path = "./input/"#badel
 
 load_dotenv(".env")
 
@@ -37,6 +37,43 @@ neo4j_graph = Neo4jGraph(
 initialize_smth(neo4j_graph)
 logger.info("Successfully connected to Neo4j")
 
+
+prompt = PromptTemplate(
+    input_variables=["text"],
+    template="""You are an expert mathematician. Extract all mathematical theorems, lemmas, propositions, and corollaries from the text below.
+
+Return ONLY a valid JSON object in this exact format (no other text):
+{{
+"theorems": [
+{{
+    "name": "theorem name",
+    "statement": "formal mathematical statement",
+    "proof": "proof text or 'Not provided'",
+    "subject": "main subject: Algebra, Analysis, Topology, Number Theory, Geometry, Probability, or Logic",
+    "domain": "specific subdomain like Linear Algebra, Real Analysis, Group Theory, etc.",
+    "dependencies": ["theorem1", "theorem2"],
+    "type": "Theorem, Lemma, Proposition, or Corollary"
+}}
+]
+}}
+
+Rules:
+1. Extract ALL mathematical statements
+2. Use clear, standard mathematical terminology
+3. If proof is not explicit, write "Not provided"
+4. Dependencies are theorem names mentioned in the proof
+5. Return valid JSON only
+6. Read the Context twice and carefully before generating JSON object.
+7. Do not return anything other than the JSON object.
+8. Do not include any explanations or apologies in your responses.
+9. Do not hallucinate.
+
+Text to analyze:
+{text}
+
+JSON response:"""
+        )
+        
 
 #creating class for theorem
 
@@ -115,7 +152,6 @@ def get_theorems_by_subject(subject: str, limit: int = 10) -> List[Dict[str, Any
         result = neo4j_graph.query(query, params={'subject': subject, 'limit': limit})
         return result
 
-
 def get_theorems_by_domain(domain: str, limit: int = 10) -> List[Dict[str, Any]]:
         query = """
         MATCH (t:Theorem)-[:BELONGS_TO_DOMAIN]->(s:Domain {name: $domain})
@@ -128,3 +164,6 @@ def get_theorems_by_domain(domain: str, limit: int = 10) -> List[Dict[str, Any]]
         """
         result = neo4j_graph.query(query, params={'subject': domain, 'limit': limit})
         return result
+
+#add here some more get
+
