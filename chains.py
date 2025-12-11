@@ -8,7 +8,7 @@ from langchain_core.prompts import (
     HumanMessagePromptTemplate,
     SystemMessagePromptTemplate,
 )
-from utils import BaseLogger, extract_title_and_question, format_docs
+from utils import BaseLogger
 
 
 
@@ -101,15 +101,16 @@ def configure_qa_rag_chain(llm, embeddings, embeddings_store_url, username, pass
     ORDER BY similarity ASC // so that best answers are the last
     """,
     )
-    kg_qa = (
-        RunnableParallel(
-            {
-                "summaries": kg.as_retriever(search_kwargs={"k": 2}) | format_docs,
-                "question": RunnablePassthrough(),
-            }
-        )
-        | qa_prompt
-        | llm
-        | StrOutputParser()
-    )
-    return kg_qa
+    
+    # kg_qa = (
+    #     RunnableParallel(
+    #         {
+    #             "summaries": kg.as_retriever(search_kwargs={"k": 2}) | format_docs,
+    #             "question": RunnablePassthrough(),
+    #         }
+    #     )
+    #     | qa_prompt
+    #     | llm
+    #     | StrOutputParser()
+    # )
+    # return kg_qa

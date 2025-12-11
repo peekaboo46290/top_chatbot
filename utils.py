@@ -1,6 +1,6 @@
 import re
 import json
-import fitz  
+import pdfplumber
 from typing import List
 
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -13,10 +13,9 @@ class BaseLogger:
 
 def read_pdf_pymupdf(pdf_path: str) -> str:
     text = ""
-    doc = fitz.open(pdf_path)
-    for page in doc:
-        text += page.get_text() + "\n\n"
-    doc.close()
+    with pdfplumber.open(pdf_path) as pdf:
+            for page in pdf.pages:
+                text += page.extract_text() + "\n\n"
     return text
 
 
@@ -61,7 +60,7 @@ def extract_from_text(llm_chain, text: str, logger= BaseLogger()) -> List[Theore
 
 def extract_from_chunk(llm_chain, chunk: str, logger= BaseLogger()) -> List[Theorem]:
         try:
-            response = llm_chain.run(text=chunk)
+            response = llm_chain.invoke({"text": chunk})
             return parse_response(response= response,logger= logger)
         except Exception as e:
             logger.error(f"Error extracting from chunk: {e}")

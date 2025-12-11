@@ -2,18 +2,17 @@ import os
 from typing import List, Dict, Any
 from dotenv import load_dotenv
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 from langchain_neo4j import Neo4jGraph
 from langchain_core.prompts import PromptTemplate
-from langchain.chains import LLMChain
-from langchain_ollama.llms import OllamaLLM
-from streamlit.logger import get_logger
+from langchain_core.output_parsers import StrOutputParser
+# from streamlit.logger import get_logger
+import logging
 
-from utils import initialize_smth, read_pdf_pymupdf, parse_response
-from chains import load_embedding_model
+from utils import initialize_smth, read_pdf_pymupdf, extract_from_text
+from chains import load_embedding_model, load_llm
 
-input_path = "./input/"#badel
 
 load_dotenv(".env")
 
@@ -23,7 +22,7 @@ password = os.getenv("NEO4J_PASSWORD")
 ollama_base_url = os.getenv("OLLAMA_BASE_URL")
 llm_name = os.getenv("LLM")
 
-logger = get_logger(__name__)
+logger = logging.getLogger(__name__)
 
 prompt = PromptTemplate(
     input_variables=["text"],
@@ -67,15 +66,13 @@ embeddings, dimension = load_embedding_model(
     config={"ollama_base_url": ollama_base_url, "llm" : llm_name}, logger=logger
 )
 
-llm = OllamaLLM(
-    model = llm_name,
-    base_url = ollama_base_url,
-    temperature=0,
-    num_predict= dimension,
-    top_p=0.3,  # Higher value (0.95) will lead to more diverse text, while a lower value (0.5) will generate more focused text.
+llm = load_llm(
+    llm_name= llm_name,
+    ollama_base_url=ollama_base_url,
+    logger= logger
 )
 
-chain = LLMChain(llm= llm, prompt= prompt, verbose=False)
+chain = prompt | llm | StrOutputParser()
 logger.info("did the chain stuff")
 
 #loading neo4j
@@ -95,8 +92,9 @@ class Theorem(BaseModel):
     subject:str #alg or anl ...
     domain: str #top or cal..
     dependencies: List[str]
-    t_type:str #lemme or prop ... 
-    
+    t_type:str #lemme or prop ...     
+
+
 def add_theorem(theorem:Theorem):
     try:
         create_theorem_query = """
@@ -178,3 +176,37 @@ def get_theorems_by_domain(domain: str, limit: int = 10) -> List[Dict[str, Any]]
 
 #add here some more get
 
+def process_file(file_path:str):
+    text = read_pdf_pymupdf(file_path)
+    theorems = extract_from_text(
+        llm_chain= chain,
+        text= text,
+        logger= logger
+    )
+    
+    succesful_count = 0
+    failed_count = 0
+    
+    for theorem in theorems:
+        if add_theorem(theorem):
+            succesful_count += 1
+        else:
+            failed_count += 1
+    
+    logger.info(f"Successfully added {succesful_count} theorem(s)")
+    logger.info(f"Failed to added {failed_count} theorem(s)")
+    logger.info(f"Finished processing.\n{"=" * 50}")
+
+
+
+def load_input(input_path = "input/"):
+    if not os.path.exists(input_path):
+        logger.info("couldn't find input path")
+    
+    for file in os.listdir(input_path):
+        if file.endswith(".pdf"):
+            logger.info(f"{"=" * 50}\nProcessing: {file}")
+            pdf_file_path = os.path.join(input_path, file)
+            process_file(pdf_file_path)
+
+load_input()
