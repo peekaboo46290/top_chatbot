@@ -8,7 +8,6 @@ from langchain_core.prompts import (
     HumanMessagePromptTemplate,
     SystemMessagePromptTemplate,
 )
-from typing import List, Any
 from utils import BaseLogger, extract_title_and_question, format_docs
 
 
@@ -24,7 +23,7 @@ def load_embedding_model(logger=BaseLogger(), config={}):
 
 
 def load_llm(llm_name:str, ollama_base_url:str, logger = BaseLogger()):
-    logger.info(f"LLM: Using Ollama: {llm_name}")
+    logger.info(f"Loaded llm: {llm_name}")
     return ChatOllama(
         temperature=0,
         base_url=ollama_base_url,
@@ -38,7 +37,6 @@ def load_llm(llm_name:str, ollama_base_url:str, logger = BaseLogger()):
 
 
 def configure_llm_only_chain(llm):
-    # LLM only response
     template = """
     You are a helpful assistant that helps a support agent with answering math questions.
     If you don't know the answer, just say that you don't know, you must not make up an answer.

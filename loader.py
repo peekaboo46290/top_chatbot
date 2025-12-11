@@ -4,13 +4,13 @@ from dotenv import load_dotenv
 
 from pydantic import BaseModel, Field
 
-
 from langchain_neo4j import Neo4jGraph
 from langchain_core.prompts import PromptTemplate
-import streamlit as st
+from langchain.chains import LLMChain
+from langchain_comunity.llms import Ollama
 from streamlit.logger import get_logger
 
-from utils import initialize_smth, read_pdf_pymupdf
+from utils import initialize_smth, read_pdf_pymupdf, parse_response
 from chains import load_embedding_model
 
 input_path = "./input/"#badel
@@ -24,19 +24,6 @@ ollama_base_url = os.getenv("OLLAMA_BASE_URL")
 llm_name = os.getenv("LLM")
 
 logger = get_logger(__name__)
-
-
-embeddings, dimension = load_embedding_model(
-    config={"ollama_base_url": ollama_base_url, "llm" : llm_name}, logger=logger
-)
-
-#loading neo4j
-neo4j_graph = Neo4jGraph(
-    url=url, username=username, password=password, refresh_schema=False
-)
-initialize_smth(neo4j_graph)
-logger.info("Successfully connected to Neo4j")
-
 
 prompt = PromptTemplate(
     input_variables=["text"],
@@ -74,6 +61,30 @@ Text to analyze:
 JSON response:"""
         )
         
+
+
+embeddings, dimension = load_embedding_model(
+    config={"ollama_base_url": ollama_base_url, "llm" : llm_name}, logger=logger
+)
+
+llm = Ollama(
+    model = llm_name,
+    base_url = ollama_base_url,
+    temperature=0,
+    num_predict= dimension,
+    top_p=0.3,  # Higher value (0.95) will lead to more diverse text, while a lower value (0.5) will generate more focused text.
+)
+
+chain = LLMChain(llm= llm, prompt= prompt, verbose=False)
+logger.info("did the chain stuff")
+
+#loading neo4j
+neo4j_graph = Neo4jGraph(
+    url=url, username=username, password=password, refresh_schema=False
+)
+initialize_smth(neo4j_graph)
+logger.info("Successfully connected to Neo4j")
+
 
 #creating class for theorem
 
