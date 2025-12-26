@@ -26,7 +26,7 @@ class Theorem(BaseModel):
     @field_validator('type')
     @classmethod
     def valid_type(cls, v:str, info: ValidationInfo):
-        valid_types = ['Theorem', 'Lemma', 'Proposition', 'Corollary', 'Conjecture', 'Definition']
+        valid_types = ['theorem', 'lemma', 'proposition', 'corollary', 'conjecture', 'definition', "property", "hypothesis"]
         if info.data and  v.lower() not in valid_types:
             info.data['logger'].warning(f"Invalid type '{v}', defaulting to 'Theorem'")
             return 'Theorem'

@@ -45,7 +45,7 @@ Return ONLY a valid JSON object in this exact format (no other text):
     "subject": "main subject: Algebra, Analysis, Topology, Number Theory, Geometry, Probability, or Logic",
     "domain": "specific subdomain like Linear Algebra, Real Analysis, Group Theory, etc.",
     "dependencies": ["theorem1", "theorem2"],
-    "type": "Theorem, Lemma, Proposition, or Corollary"
+    "type": "Theorem, Lemma, Proposition, Corollary, Conjecture, Definition, property or Hypothesis"
 }}
 ],
 "examples": [
