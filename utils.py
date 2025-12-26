@@ -124,6 +124,7 @@ def parse_response(response:str, logger= BaseLogger()):
         for thm_data in data.get('theorems', []):
             try:
                 theorem = Theorem(**thm_data)
+                theorem.logger = logger
                 theorems.append(theorem)
             except Exception as e:
                 logger.warning(f"Failed to validate theorem: {e}")

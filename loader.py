@@ -11,8 +11,9 @@ import logging
 
 from utils import initialize_smth, read_pdf_pymupdf, extract_from_text
 from chains import load_embedding_model, load_llm
-from theorem import Theorem
 
+from theorem import Theorem
+from example import Example
 load_dotenv(".env")
 
 url = os.getenv("NEO4J_URI")
@@ -126,7 +127,7 @@ def add_theorem(theorem:Theorem):
                 MERGE (d)-[:PART_OF_SUBJECT]->(s)
                 
                 RETURN t.name as name
-        """#hound dog
+        """#hound dog(tf)(time)
         neo4j_graph.query(
             create_theorem_query,
             params={
@@ -159,6 +160,66 @@ def add_theorem(theorem:Theorem):
     except Exception as e:
         logger.info(f"Failed to add {theorem.name}: {e}")
         return False    
+
+def check_theorem_existence(theorem_name: str) -> bool:
+    query = """
+    MATCH (t:Theorem {name: $name})
+    RETURN count(t) > 0 as exists
+    """
+    result = neo4j_graph.query(query, params={'name': theorem_name})
+    return result[0]['exists'] if result else False
+
+def add_example(example: Example) -> bool:
+        """Add an example to the graph with all relationships."""
+        try:
+            create_example_query = """
+            MERGE (e:Example {name: $name})
+            SET e.content = $content,
+                e.difficulty = $difficulty,
+
+            
+            MERGE (s:Subject {name: $subject})
+            MERGE (e)-[:BELONGS_TO_SUBJECT]->(s)
+            
+            MERGE (d:Domain {name: $domain})
+            MERGE (e)-[:BELONGS_TO_DOMAIN]->(d)
+            MERGE (d)-[:PART_OF_SUBJECT]->(s)
+            
+            RETURN e.name as name
+            """
+            
+            neo4j_graph.query(
+                create_example_query,
+                params={
+                'name': example.name,
+                'content': example.content,
+                'difficulty': example.difficulty,
+                'subject': example.subject,
+                'domain': example.domain
+            })
+            
+            for theorem_name in example.illustrates_theorems:
+                if theorem_name and theorem_name.strip():
+                    if check_theorem_existence(theorem_name= theorem_name):#mh
+                        illustrates_query = """
+                        MATCH (e:Example {name: $example_name})
+                        MERGE (t:Theorem {name: $theorem_name})
+                        MERGE (e)-[:ILLUSTRATES]->(t)
+                        """
+                        neo4j_graph.query(
+                            illustrates_query,
+                            params={
+                            'example_name': example.name,
+                            'theorem_name': theorem_name.strip()
+                        })
+                    else:
+                        logger.info(f"Couldn't find: {theorem_name}")
+            
+            logger.info(f"Added example: {example.name}")
+            return True
+        except Exception as e:
+            logger.error(f"Failed to add example '{example.name}': {e}")
+            return False
 
 def get_theorems_by_subject(subject: str, limit: int = 10) -> List[Dict[str, Any]]:
         query = """
@@ -196,16 +257,16 @@ def process_file(file_path:str):
         logger= logger
     )
     
-    succesful_count = 0
+    successful_count = 0
     failed_count = 0
     
     for theorem in theorems:
         if add_theorem(theorem):
-            succesful_count += 1
+            successful_count += 1
         else:
             failed_count += 1
     
-    logger.info(f"Successfully added {succesful_count} theorem(s)")
+    logger.info(f"Successfully added {successful_count} theorem(s)")
     logger.info(f"Failed to added {failed_count} theorem(s)")
     logger.info(f"Finished processing.\n{"=" * 50}")
 
