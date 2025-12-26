@@ -33,9 +33,11 @@ def read_pdf_pymupdf(pdf_path: str, logger = BaseLogger()) -> str:
 def initialize_smth(driver, logger= BaseLogger()):
     constraints_and_indexes = [
         "CREATE CONSTRAINT theorem_name IF NOT EXISTS FOR (t:Theorem) REQUIRE t.name IS UNIQUE",
+        "CREATE CONSTRAINT theorem_name IF NOT EXISTS FOR (e:Example) REQUIRE e.name IS UNIQUE",
         "CREATE INDEX subject_name IF NOT EXISTS FOR (s:Subject) ON (s.name)",
         "CREATE INDEX domain_name IF NOT EXISTS FOR (d:Domain) ON (d.name)",
         "CREATE INDEX theorem_type IF NOT EXISTS FOR (t:Theorem) ON (t.type)"
+        "CREATE INDEX theorem_type IF NOT EXISTS FOR (e:Example) ON (e.difficulty)"
     ]
     for query in constraints_and_indexes:
         try:

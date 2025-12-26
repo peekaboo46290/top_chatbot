@@ -4,3 +4,5 @@ source ./new_env/bin/activate
 ###
 normalent mansit shyn
 ###
+
+i chose qwen2-math bc i saw it multiple compared too and i liked it score in "https://qwenlm.github.io/blog/qwen2-math/"

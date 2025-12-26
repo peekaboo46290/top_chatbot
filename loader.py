@@ -32,7 +32,7 @@ logger = logging.getLogger(__name__)
 
 prompt = PromptTemplate(
     input_variables=["text"],
-    template="""You are an expert mathematician. Extract all mathematical theorems, lemmas, propositions, and corollaries from the text below.
+    template="""You are an expert mathematician. Extract all mathematical theorems, lemmas, propositions,  corollaries and examples from the text below.
 
 Return ONLY a valid JSON object in this exact format (no other text):
 {{
@@ -45,6 +45,17 @@ Return ONLY a valid JSON object in this exact format (no other text):
     "domain": "specific subdomain like Linear Algebra, Real Analysis, Group Theory, etc.",
     "dependencies": ["theorem1", "theorem2"],
     "type": "Theorem, Lemma, Proposition, or Corollary"
+}}
+],
+"examples": [
+{{
+    "name": "example title or 'Example: [brief description]'",
+    "content": "the complete example with solution/work shown",
+    "subject": "same subject classification as theorems",
+    "domain": "same domain classification as theorems",
+    "illustrates_theorems": ["theorem names that this example demonstrates"],
+    "difficulty": "Easy, Medium, or Hard"
+
 }}
 ]
 }}
@@ -60,6 +71,12 @@ Rules:
 8. Do not include any explanations or apologies in your responses.
 9. Do not hallucinate.
 10. Skip any book introduction.
+11 Extract BOTH theorems AND examples.
+12 Examples include worked problems, illustrations, applications.
+13 Examples should reference which theorems they demonstrate.
+14 Preserve all mathematical symbols exactly. 
+15 If no examples found, return empty examples array.
+16 If no theorems found, return empty theorems array.
 
 Text to analyze:
 {text}
