@@ -8,12 +8,12 @@ from langchain_core.prompts import (
     HumanMessagePromptTemplate,
     SystemMessagePromptTemplate,
 )
-from base_logger import BaseLogger
+from base_logger import logger
 
 
 
 
-def load_embedding_model(logger=BaseLogger(), config={}):
+def load_embedding_model(logger=logger, config={}):
     embedding = OllamaEmbeddings(
         base_url=config["ollama_base_url"], model=config["llm"]
     )
@@ -22,7 +22,7 @@ def load_embedding_model(logger=BaseLogger(), config={}):
     return embedding, dimension 
 
 
-def load_llm(llm_name:str, ollama_base_url:str, logger = BaseLogger()):
+def load_llm(llm_name:str, ollama_base_url:str, logger = logger):
     try:
         llm =  ChatOllama(
             temperature=0,

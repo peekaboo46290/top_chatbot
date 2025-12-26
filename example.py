@@ -1,11 +1,9 @@
 from typing import List, Optional
 from pydantic import BaseModel, Field, field_validator, ValidationInfo
 
-from base_logger import BaseLogger
+from base_logger import logger
 
 class Example(BaseModel):
-    logger: BaseLogger = Field(default= BaseLogger(), description="Too log information")
-
     name: str = Field(..., description="Title or identifier of the example")
     content: str = Field(..., description="The actual example with solution")
     subject: str = Field(..., description="Mathematical subject")
@@ -25,6 +23,6 @@ class Example(BaseModel):
     def valid_difficulty(cls, v:str, info: ValidationInfo):
         valid_levels = ['Easy', 'Medium', 'Hard']
         if info.data and v not in valid_levels:
-            info.data['logger'].warning(f"Invalid difficulty '{v}', defaulting to 'Medium'")
+            logger.warning(f"Invalid difficulty '{v}', defaulting to 'Medium'")
             return 'Medium'
         return v

@@ -7,7 +7,7 @@ from langchain_neo4j import Neo4jGraph
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 # from streamlit.logger import get_logger
-import logging
+from base_logger import logger
 
 from utils import initialize_smth, read_pdf, extract_from_text
 from chains import load_embedding_model, load_llm
@@ -22,14 +22,6 @@ password = os.getenv("NEO4J_PASSWORD")
 ollama_base_url = os.getenv("OLLAMA_BASE_URL")
 llm_name = os.getenv("LLM")
 
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    filename='neo4j_debug.log',
-    filemode='w'
-)
-
-logger = logging.getLogger(__name__)
 
 prompt = PromptTemplate(
     input_variables=["text"],
@@ -45,7 +37,7 @@ Return ONLY a valid JSON object in this exact format (no other text):
     "subject": "main subject: Algebra, Analysis, Topology, Number Theory, Geometry, Probability, or Logic",
     "domain": "specific subdomain like Linear Algebra, Real Analysis, Group Theory, etc.",
     "dependencies": ["theorem1", "theorem2"],
-    "type": "Theorem, Lemma, Proposition, Corollary, Conjecture, Definition, property or Hypothesis"
+    "type": one of "Theorem, Lemma, Proposition, Corollary, Conjecture, Definition, property or Hypothesis"
 }}
 ],
 "examples": [
@@ -78,6 +70,18 @@ Rules:
 14 Preserve all mathematical symbols exactly. 
 15 If no examples found, return empty examples array.
 16 If no theorems found, return empty theorems array.
+
+CRITICAL JSON RULES:
+- Use Unicode symbols directly: ∀, ∃, →, ⇒ (NOT LaTeX: \\forall, \\exists)
+- Do NOT use backslashes in strings unless escaping quotes
+- Use " for strings, escape internal quotes as \\"
+- Valid escapes only: \\", \\\\, \\n, \\t
+
+Example CORRECT format:
+{
+  "statement": "For all x ∈ ℝ, we have x² ≥ 0",
+  "proof": "Let x ∈ ℝ. Then x² ≥ 0 by definition."
+}
 
 Text to analyze:
 {text}

@@ -7,32 +7,39 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from docling.document_converter import DocumentConverter
 
 from theorem import Theorem
-from base_logger import BaseLogger
+from example import Example
+from base_logger import logger
 
 converter = DocumentConverter()
 
 
-def read_pdf(pdf_path: str, logger = BaseLogger()) -> str:
+def read_pdf(pdf_path: str, logger = logger) -> str:
     text = ""
     try:
-        result = converter.convert(pdf_path)
+        doc = fitz.open(pdf_path)
         
-        text = result.document.export_to_markdown()
+        # Extract text from each page
+        for page_num in range(len(doc)):
+            page = doc.load_page(page_num)
+            text += page.get_text() + "\n\n"
+
+        doc.close()
+        logger.info(f"Extracted {len(text)} characters")
         return text
     except Exception as e:
         logger.info(f"Error reading PDF with PyMuPDF: {e}")
         return ""
 
 
-def initialize_smth(driver, logger= BaseLogger()):
+def initialize_smth(driver, logger= logger):
     constraints_and_indexes = [
-        "CREATE CONSTRAINT theorem_name IF NOT EXISTS FOR (t:Theorem) REQUIRE t.name IS UNIQUE",
-        "CREATE CONSTRAINT theorem_name IF NOT EXISTS FOR (e:Example) REQUIRE e.name IS UNIQUE",
-        "CREATE INDEX subject_name IF NOT EXISTS FOR (s:Subject) ON (s.name)",
-        "CREATE INDEX domain_name IF NOT EXISTS FOR (d:Domain) ON (d.name)",
-        "CREATE INDEX theorem_type IF NOT EXISTS FOR (t:Theorem) ON (t.type)"
-        "CREATE INDEX theorem_type IF NOT EXISTS FOR (e:Example) ON (e.difficulty)"
-    ]
+            "CREATE CONSTRAINT theorem_name IF NOT EXISTS FOR (t:Theorem) REQUIRE t.name IS UNIQUE",
+            "CREATE CONSTRAINT example_name IF NOT EXISTS FOR (e:Example) REQUIRE e.name IS UNIQUE",
+            "CREATE INDEX subject_name IF NOT EXISTS FOR (s:Subject) ON (s.name)",
+            "CREATE INDEX domain_name IF NOT EXISTS FOR (d:Domain) ON (d.name)",
+            "CREATE INDEX theorem_type IF NOT EXISTS FOR (t:Theorem) ON (t.type)",
+            "CREATE INDEX example_difficulty IF NOT EXISTS FOR (e:Example) ON (e.difficulty)"
+        ]
     for query in constraints_and_indexes:
         try:
             driver.query(query)
@@ -76,7 +83,7 @@ def create_math_aware_splitter(chunk_size: int = 2500, chunk_overlap: int = 250)
         is_separator_regex=False
     )
 
-def extract_from_text(llm_chain, text: str, logger= BaseLogger()) -> List[Theorem]:
+def extract_from_text(llm_chain, text: str, logger= logger) :
     text_splitter = create_math_aware_splitter()
     
     chunks = text_splitter.split_text(text)
@@ -102,16 +109,17 @@ def extract_from_text(llm_chain, text: str, logger= BaseLogger()) -> List[Theore
     return list(unique_theorems), list(unique_examples)
 
 
-def extract_from_chunk(llm_chain, chunk: str, logger= BaseLogger()) -> List[Theorem]:
+def extract_from_chunk(llm_chain, chunk: str, logger= logger) :
         try:
             response = llm_chain.invoke({"text": chunk})
-            return parse_response(response= response,logger= logger)
+            theorems, examples =  parse_response(response= response,logger= logger)
+            return theorems, examples
         except Exception as e:
             logger.error(f"Error extracting from chunk: {e}")
             return []
 
 
-def parse_response(response:str, logger= BaseLogger()):
+def parse_response(response:str, logger= logger):
     try:
         json_match = re.search(r'\{.*\}', response, re.DOTALL)
         if not json_match:
@@ -132,17 +140,17 @@ def parse_response(response:str, logger= BaseLogger()):
         examples = []
         for ex_data in data.get('examples', []):
             try:
-                example = Theorem(**thm_data, logger= logger)
+                example = Example(**ex_data)
                 examples.append(example)
             except Exception as e:
-                logger.warning(f"Failed to validate theorem: {e}")
-                continue
+                logger.warning(f"Failed to validate example: {e}")
+            continue
         
         return theorems, examples
     
     except json.JSONDecodeError as e:
         logger.error(f"JSON parsing error: {e}")
-        return []
+        return [], []
     except Exception as e:
         logger.error(f"Error parsing response: {e}")
-        return []
+        return [], []

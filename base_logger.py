@@ -1,4 +1,13 @@
 from pydantic import BaseModel
 from typing import Any
-class BaseLogger(BaseModel):
-    info: Any = print
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    filename='neo4j_debug.log',
+    filemode='w'
+)
+
+logger = logging.getLogger(__name__)
+

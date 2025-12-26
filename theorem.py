@@ -1,11 +1,11 @@
 from typing import List, Optional
 from pydantic import BaseModel, Field, field_validator, ValidationInfo
 
-from base_logger import BaseLogger
+from base_logger import logger
 
 
 class Theorem(BaseModel):
-    logger: BaseLogger = Field(default= BaseLogger(), description="Too log information")
+    
 
     name: str = Field(..., description="Name or title of the theorem")
     statement: str = Field(..., description="Formal statement of the theorem")
@@ -28,6 +28,6 @@ class Theorem(BaseModel):
     def valid_type(cls, v:str, info: ValidationInfo):
         valid_types = ['theorem', 'lemma', 'proposition', 'corollary', 'conjecture', 'definition', "property", "hypothesis"]
         if info.data and  v.lower() not in valid_types:
-            info.data['logger'].warning(f"Invalid type '{v}', defaulting to 'Theorem'")
+            logger.warning(f"Invalid type '{v}', defaulting to 'Theorem'")
             return 'Theorem'
         return v
