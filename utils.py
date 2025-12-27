@@ -84,10 +84,19 @@ def create_math_aware_splitter(chunk_size: int = 2500, chunk_overlap: int = 250)
     )
 
 def extract_from_text(llm_chain, text: str, logger= logger) :
-    text_splitter = create_math_aware_splitter()
-    
+    text_splitter = RecursiveCharacterTextSplitter(
+            chunk_size=2500,
+            chunk_overlap=250,
+            separators=[
+                "\n\n\n", "\n\n", "\n",
+                "∎", "□", "∴", "∵", "⇒", "⇔", "∀", "∃",
+                ". ", " ", ""
+            ],
+            length_function=len
+        )
     chunks = text_splitter.split_text(text)
     logger.info(f"Split text into {len(chunks)} chunks")
+    print (chunks[200])
     
     all_theorems = []
     all_examples = []
@@ -97,7 +106,7 @@ def extract_from_text(llm_chain, text: str, logger= logger) :
         theorems, examples = extract_from_chunk(llm_chain= llm_chain,chunk= chunk, logger= logger)
         all_theorems.extend(theorems)
         all_examples.extend(examples)
-        logger.info(f"Extracted {len(theorems)} theorems from chunk {i}")
+        logger.info(f"Extracted {len(theorems)} theorems and {len(examples)} examples from chunk {i}")
     
     
     unique_theorems = {t.name: t for t in all_theorems}.values()
@@ -111,12 +120,12 @@ def extract_from_text(llm_chain, text: str, logger= logger) :
 
 def extract_from_chunk(llm_chain, chunk: str, logger= logger) :
         try:
-            response = llm_chain.invoke({"text": chunk})
+            response = llm_chain.invoke({"statement": chunk})
             theorems, examples =  parse_response(response= response,logger= logger)
             return theorems, examples
         except Exception as e:
             logger.error(f"Error extracting from chunk: {e}")
-            return []
+            return [], []
 
 
 def parse_response(response:str, logger= logger):
@@ -124,7 +133,7 @@ def parse_response(response:str, logger= logger):
         json_match = re.search(r'\{.*\}', response, re.DOTALL)
         if not json_match:
             logger.warning("No JSON found in response")
-            return []
+            return [], []
         
         data = json.loads(json_match.group())
         

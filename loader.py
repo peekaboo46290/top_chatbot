@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 
 
 from langchain_neo4j import Neo4jGraph
-from langchain_core.prompts import PromptTemplate
+from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 # from streamlit.logger import get_logger
 from base_logger import logger
@@ -23,9 +23,7 @@ ollama_base_url = os.getenv("OLLAMA_BASE_URL")
 llm_name = os.getenv("LLM")
 
 
-prompt = PromptTemplate(
-    input_variables=["text"],
-    template="""You are an expert mathematician. Extract all mathematical theorems, lemmas, propositions,  corollaries and examples from the text below.
+template="""You are an expert mathematician. Extract all mathematical theorems, lemmas, propositions,  corollaries and examples from the text below.
 
 Return ONLY a valid JSON object in this exact format (no other text):
 {{
@@ -37,7 +35,7 @@ Return ONLY a valid JSON object in this exact format (no other text):
     "subject": "main subject: Algebra, Analysis, Topology, Number Theory, Geometry, Probability, or Logic",
     "domain": "specific subdomain like Linear Algebra, Real Analysis, Group Theory, etc.",
     "dependencies": ["theorem1", "theorem2"],
-    "type": one of "Theorem, Lemma, Proposition, Corollary, Conjecture, Definition, property or Hypothesis"
+    "type":  "Theorem, Lemma, Proposition, Corollary, Conjecture, Definition, property or Hypothesis"
 }}
 ],
 "examples": [
@@ -70,7 +68,7 @@ Rules:
 14 Preserve all mathematical symbols exactly. 
 15 If no examples found, return empty examples array.
 16 If no theorems found, return empty theorems array.
-
+17. chose one type for theorem type
 CRITICAL JSON RULES:
 - Use Unicode symbols directly: ∀, ∃, →, ⇒ (NOT LaTeX: \\forall, \\exists)
 - Do NOT use backslashes in strings unless escaping quotes
@@ -83,11 +81,12 @@ Example CORRECT format:
   "proof": "Let x ∈ ℝ. Then x² ≥ 0 by definition."
 }
 
-Text to analyze:
-{text}
-
-JSON response:"""
-        )
+Return valid JSON only."""
+prompt = ChatPromptTemplate.from_messages([
+    ("system", template), 
+    ("human", f"Text to analyze:\n\n{{text}}\n\nJSON response:")
+])
+    
         
 
 
