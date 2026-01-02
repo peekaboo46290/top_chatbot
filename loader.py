@@ -53,7 +53,7 @@ Return ONLY a valid JSON object in this exact format (no other text):
 ]
 }}
 
-Most important rule: Only use valid JSON escape sequences
+Most important rule: Only use valid JSON escape sequences Don't use "\\)" and "\\(" just use plain "(" and ")"
 Rules:
 1. Extract ALL mathematical statements
 2. Use clear, standard mathematical terminology
@@ -72,11 +72,11 @@ Rules:
 15 If no examples found, return empty examples array.
 16 If no theorems found, return empty theorems array.
 17. chose one type for theorem type
-18. Use Unicode symbols directly: ∀, ∃, →, ⇒
+18. Use Unicode symbols directly: ∀, ∃, →, ⇒, Z, R
 CRITICAL: When writing mathematical statements in JSON:
 1. Use plain text or Unicode symbols
 2. If you MUST use LaTeX, escape backslashes: use \\ for single backslash
-3. Example: "statement": "If \\(a\\) and \\(b\\) are integers..." is WRONG dont use
+4. Example: "statement": "If \\(a\\) and \\(b\\) are integers..." is WRONG dont use
 5. Better: "statement": "If a and b are integers..." (plain text)
 
 Text to analyze:

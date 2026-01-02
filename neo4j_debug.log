@@ -1,31 +1,880 @@
-2026-01-01 14:49:14,540 - base_logger - INFO - Embedding: Using Ollama
-2026-01-01 14:49:14,910 - base_logger - INFO - Loaded llm: qwen2-math:7b
-2026-01-01 14:49:14,910 - base_logger - INFO - did the chain stuff
-2026-01-01 14:49:16,982 - neo4j.notifications - INFO - Received notification from DBMS server: {severity: INFORMATION} {code: Neo.ClientNotification.Schema.IndexOrConstraintAlreadyExists} {category: SCHEMA} {title: `CREATE CONSTRAINT theorem_name IF NOT EXISTS FOR (e:Theorem) REQUIRE (e.name) IS UNIQUE` has no effect.} {description: `CONSTRAINT theorem_name FOR (e:Theorem) REQUIRE (e.name) IS UNIQUE` already exists.} {position: None} for query: 'CREATE CONSTRAINT theorem_name IF NOT EXISTS FOR (t:Theorem) REQUIRE t.name IS UNIQUE'
-2026-01-01 14:49:16,986 - neo4j.notifications - INFO - Received notification from DBMS server: {severity: INFORMATION} {code: Neo.ClientNotification.Schema.IndexOrConstraintAlreadyExists} {category: SCHEMA} {title: `CREATE CONSTRAINT example_name IF NOT EXISTS FOR (e:Example) REQUIRE (e.name) IS UNIQUE` has no effect.} {description: `CONSTRAINT example_name FOR (e:Example) REQUIRE (e.name) IS UNIQUE` already exists.} {position: None} for query: 'CREATE CONSTRAINT example_name IF NOT EXISTS FOR (e:Example) REQUIRE e.name IS UNIQUE'
-2026-01-01 14:49:16,988 - neo4j.notifications - INFO - Received notification from DBMS server: {severity: INFORMATION} {code: Neo.ClientNotification.Schema.IndexOrConstraintAlreadyExists} {category: SCHEMA} {title: `CREATE RANGE INDEX subject_name IF NOT EXISTS FOR (e:Subject) ON (e.name)` has no effect.} {description: `RANGE INDEX subject_name FOR (e:Subject) ON (e.name)` already exists.} {position: None} for query: 'CREATE INDEX subject_name IF NOT EXISTS FOR (s:Subject) ON (s.name)'
-2026-01-01 14:49:16,990 - neo4j.notifications - INFO - Received notification from DBMS server: {severity: INFORMATION} {code: Neo.ClientNotification.Schema.IndexOrConstraintAlreadyExists} {category: SCHEMA} {title: `CREATE RANGE INDEX domain_name IF NOT EXISTS FOR (e:Domain) ON (e.name)` has no effect.} {description: `RANGE INDEX domain_name FOR (e:Domain) ON (e.name)` already exists.} {position: None} for query: 'CREATE INDEX domain_name IF NOT EXISTS FOR (d:Domain) ON (d.name)'
-2026-01-01 14:49:16,992 - neo4j.notifications - INFO - Received notification from DBMS server: {severity: INFORMATION} {code: Neo.ClientNotification.Schema.IndexOrConstraintAlreadyExists} {category: SCHEMA} {title: `CREATE RANGE INDEX theorem_type IF NOT EXISTS FOR (e:Theorem) ON (e.type)` has no effect.} {description: `RANGE INDEX theorem_type FOR (e:Theorem) ON (e.type)` already exists.} {position: None} for query: 'CREATE INDEX theorem_type IF NOT EXISTS FOR (t:Theorem) ON (t.type)'
-2026-01-01 14:49:16,994 - neo4j.notifications - INFO - Received notification from DBMS server: {severity: INFORMATION} {code: Neo.ClientNotification.Schema.IndexOrConstraintAlreadyExists} {category: SCHEMA} {title: `CREATE RANGE INDEX example_difficulty IF NOT EXISTS FOR (e:Example) ON (e.difficulty)` has no effect.} {description: `RANGE INDEX example_difficulty FOR (e:Example) ON (e.difficulty)` already exists.} {position: None} for query: 'CREATE INDEX example_difficulty IF NOT EXISTS FOR (e:Example) ON (e.difficulty)'
-2026-01-01 14:49:16,995 - base_logger - INFO - Successfully connected to Neo4j
-2026-01-01 14:49:16,995 - base_logger - INFO - ================================================================================
-2026-01-01 14:49:16,995 - base_logger - INFO - Processing: David_S_Dummit_Richard_M_Foote_Abstract_Algeb_230928_225848.pdf
-2026-01-01 14:49:20,086 - base_logger - INFO - Extracted 2582873 characters
-2026-01-01 14:49:20,114 - base_logger - INFO - Split text into 1608 chunks
-2026-01-01 14:49:20,115 - base_logger - INFO - Processing chunk 1/1608
-2026-01-01 14:49:20,641 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
-2026-01-01 14:49:20,916 - base_logger - INFO - there is 2 entire
-2026-01-01 14:49:20,916 - base_logger - INFO - Extracted 0 theorems and 0 examples from chunk 1
-2026-01-01 14:49:20,916 - base_logger - INFO - Processing chunk 2/1608
-2026-01-01 14:49:21,229 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
-2026-01-01 14:49:36,503 - base_logger - ERROR - JSON parsing error: Invalid \escape: line 5 column 25 (char 97)
-2026-01-01 14:49:36,503 - base_logger - INFO - Extracted 0 theorems and 0 examples from chunk 2
-2026-01-01 14:49:36,503 - base_logger - INFO - Processing chunk 3/1608
-2026-01-01 14:49:36,628 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
-2026-01-01 14:49:42,761 - base_logger - ERROR - JSON parsing error: Invalid \escape: line 5 column 23 (char 95)
-2026-01-01 14:49:42,761 - base_logger - INFO - Extracted 0 theorems and 0 examples from chunk 3
-2026-01-01 14:49:42,761 - base_logger - INFO - Processing chunk 4/1608
-2026-01-01 14:49:43,112 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
-2026-01-01 14:49:48,638 - base_logger - ERROR - JSON parsing error: Invalid \escape: line 5 column 24 (char 78)
-2026-01-01 14:49:48,638 - base_logger - INFO - Extracted 0 theorems and 0 examples from chunk 4
-2026-01-01 14:49:48,638 - base_logger - INFO - Processing chunk 5/1608
+2026-01-02 01:28:02,434 - base_logger - INFO - Embedding: Using Ollama
+2026-01-02 01:28:02,834 - base_logger - INFO - Loaded llm: qwen2-math:7b
+2026-01-02 01:28:02,834 - base_logger - INFO - did the chain stuff
+2026-01-02 01:28:04,881 - neo4j.notifications - INFO - Received notification from DBMS server: {severity: INFORMATION} {code: Neo.ClientNotification.Schema.IndexOrConstraintAlreadyExists} {category: SCHEMA} {title: `CREATE CONSTRAINT theorem_name IF NOT EXISTS FOR (e:Theorem) REQUIRE (e.name) IS UNIQUE` has no effect.} {description: `CONSTRAINT theorem_name FOR (e:Theorem) REQUIRE (e.name) IS UNIQUE` already exists.} {position: None} for query: 'CREATE CONSTRAINT theorem_name IF NOT EXISTS FOR (t:Theorem) REQUIRE t.name IS UNIQUE'
+2026-01-02 01:28:04,886 - neo4j.notifications - INFO - Received notification from DBMS server: {severity: INFORMATION} {code: Neo.ClientNotification.Schema.IndexOrConstraintAlreadyExists} {category: SCHEMA} {title: `CREATE CONSTRAINT example_name IF NOT EXISTS FOR (e:Example) REQUIRE (e.name) IS UNIQUE` has no effect.} {description: `CONSTRAINT example_name FOR (e:Example) REQUIRE (e.name) IS UNIQUE` already exists.} {position: None} for query: 'CREATE CONSTRAINT example_name IF NOT EXISTS FOR (e:Example) REQUIRE e.name IS UNIQUE'
+2026-01-02 01:28:04,890 - neo4j.notifications - INFO - Received notification from DBMS server: {severity: INFORMATION} {code: Neo.ClientNotification.Schema.IndexOrConstraintAlreadyExists} {category: SCHEMA} {title: `CREATE RANGE INDEX subject_name IF NOT EXISTS FOR (e:Subject) ON (e.name)` has no effect.} {description: `RANGE INDEX subject_name FOR (e:Subject) ON (e.name)` already exists.} {position: None} for query: 'CREATE INDEX subject_name IF NOT EXISTS FOR (s:Subject) ON (s.name)'
+2026-01-02 01:28:04,896 - neo4j.notifications - INFO - Received notification from DBMS server: {severity: INFORMATION} {code: Neo.ClientNotification.Schema.IndexOrConstraintAlreadyExists} {category: SCHEMA} {title: `CREATE RANGE INDEX domain_name IF NOT EXISTS FOR (e:Domain) ON (e.name)` has no effect.} {description: `RANGE INDEX domain_name FOR (e:Domain) ON (e.name)` already exists.} {position: None} for query: 'CREATE INDEX domain_name IF NOT EXISTS FOR (d:Domain) ON (d.name)'
+2026-01-02 01:28:04,900 - neo4j.notifications - INFO - Received notification from DBMS server: {severity: INFORMATION} {code: Neo.ClientNotification.Schema.IndexOrConstraintAlreadyExists} {category: SCHEMA} {title: `CREATE RANGE INDEX theorem_type IF NOT EXISTS FOR (e:Theorem) ON (e.type)` has no effect.} {description: `RANGE INDEX theorem_type FOR (e:Theorem) ON (e.type)` already exists.} {position: None} for query: 'CREATE INDEX theorem_type IF NOT EXISTS FOR (t:Theorem) ON (t.type)'
+2026-01-02 01:28:04,903 - neo4j.notifications - INFO - Received notification from DBMS server: {severity: INFORMATION} {code: Neo.ClientNotification.Schema.IndexOrConstraintAlreadyExists} {category: SCHEMA} {title: `CREATE RANGE INDEX example_difficulty IF NOT EXISTS FOR (e:Example) ON (e.difficulty)` has no effect.} {description: `RANGE INDEX example_difficulty FOR (e:Example) ON (e.difficulty)` already exists.} {position: None} for query: 'CREATE INDEX example_difficulty IF NOT EXISTS FOR (e:Example) ON (e.difficulty)'
+2026-01-02 01:28:04,905 - base_logger - INFO - Successfully connected to Neo4j
+2026-01-02 01:28:04,905 - base_logger - INFO - ================================================================================
+2026-01-02 01:28:04,906 - base_logger - INFO - Processing: David_S_Dummit_Richard_M_Foote_Abstract_Algeb_230928_225848.pdf
+2026-01-02 01:28:08,256 - base_logger - INFO - Extracted 2582873 characters
+2026-01-02 01:28:08,292 - base_logger - INFO - Split text into 1608 chunks
+2026-01-02 01:28:08,293 - base_logger - INFO - Processing chunk 1/1608
+2026-01-02 01:28:08,619 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-01-02 01:28:08,909 - base_logger - INFO - there is 2 entire
+2026-01-02 01:28:08,909 - base_logger - INFO - Extracted 0 theorems and 0 examples from chunk 1
+2026-01-02 01:28:08,909 - base_logger - INFO - Processing chunk 2/1608
+2026-01-02 01:28:09,229 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-01-02 01:28:12,656 - base_logger - INFO - there is 2 entire
+2026-01-02 01:28:12,656 - base_logger - INFO - Extracted 1 theorems and 1 examples from chunk 2
+2026-01-02 01:28:12,656 - base_logger - INFO - Processing chunk 3/1608
+2026-01-02 01:28:12,770 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-01-02 01:28:19,213 - base_logger - ERROR - JSON parsing error: Invalid \escape: line 16 column 41 (char 580)
+2026-01-02 01:28:19,213 - base_logger - INFO - {
+"theorems": [
+{
+    "name": "Theorem (Fixed Points and Coefficients)",
+    "statement": "Let (G) be a group acting on a (G)-module (A). The fixed points of (G) acting on (A) are the elements of (A) that are invariant under the action of (G). The 17th cohomology group of (G) with coefficients in (A) is denoted by (H^{17}(G, A)).",
+    "proof": "Not provided",
+    "subject": "Algebra",
+    "domain": "Group Theory",
+    "dependencies": [],
+    "type": "Theorem"
+}
+],
+"examples": [
+{
+    "name": "Example: Fixed Points and Coefficients",
+    "content": "Consider the group (G = \mathbb{Z}/2\mathbb{Z}) acting on the (G)-module (A = \mathbb{Z}) by negation. The fixed points of (G) acting on (A) are the elements of (A) that are invariant under the action of (G). In this case, the only fixed point is 0. The 17th cohomology group of (G) with coefficients in (A) is (H^{17}(G, A) = 0) because (G) has period 2 and 17 is odd.",
+    "subject": "Algebra",
+    "domain": "Group Theory",
+    "illustrates_theorems": ["Theorem (Fixed Points and Coefficients)"],
+    "difficulty": "Medium"
+}
+]
+}
+2026-01-02 01:28:19,213 - base_logger - INFO - Extracted 0 theorems and 0 examples from chunk 3
+2026-01-02 01:28:19,213 - base_logger - INFO - Processing chunk 4/1608
+2026-01-02 01:28:19,524 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-01-02 01:28:25,261 - base_logger - ERROR - JSON parsing error: Invalid \escape: line 25 column 52 (char 650)
+2026-01-02 01:28:25,261 - base_logger - INFO - {
+  "theorems": [
+    {
+      "name": "Theorem 1.2.1",
+      "statement": "If (a) and (b) are integers, then (a + b) is an integer.",
+      "proof": "Not provided",
+      "subject": "Algebra",
+      "domain": "Number Theory",
+      "dependencies": [],
+      "type": "Theorem"
+    },
+    {
+      "name": "Theorem 1.3.2",
+      "statement": "If (a) and (b) are integers, then (a + b = b + a).",
+      "proof": "Not provided",
+      "subject": "Algebra",
+      "domain": "Number Theory",
+      "dependencies": [],
+      "type": "Theorem"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Example 1.2.3",
+      "content": "Let (G) be a group and let (a, b \in G). Then the operation of the group is defined as follows: for any (x, y \in G), (x * y = xy).",
+      "subject": "Group Theory",
+      "domain": "Abstract Algebra",
+      "illustrates_theorems": ["Theorem 1.2.1", "Theorem 1.3.2"],
+      "difficulty": "Easy"
+    }
+  ]
+}
+2026-01-02 01:28:25,261 - base_logger - INFO - Extracted 0 theorems and 0 examples from chunk 4
+2026-01-02 01:28:25,262 - base_logger - INFO - Processing chunk 5/1608
+2026-01-02 01:28:25,481 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-01-02 01:28:43,850 - base_logger - INFO - there is 2 entire
+2026-01-02 01:28:43,851 - base_logger - WARNING - Invalid difficulty 'Not provided', defaulting to 'Medium'
+2026-01-02 01:28:43,851 - base_logger - WARNING - Invalid difficulty 'Not provided', defaulting to 'Medium'
+2026-01-02 01:28:43,851 - base_logger - WARNING - Invalid difficulty 'Not provided', defaulting to 'Medium'
+2026-01-02 01:28:43,851 - base_logger - WARNING - Invalid difficulty 'Not provided', defaulting to 'Medium'
+2026-01-02 01:28:43,851 - base_logger - INFO - Extracted 12 theorems and 4 examples from chunk 5
+2026-01-02 01:28:43,851 - base_logger - INFO - Processing chunk 6/1608
+2026-01-02 01:28:44,062 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-01-02 01:28:59,806 - base_logger - ERROR - JSON parsing error: Invalid \escape: line 70 column 42 (char 2644)
+2026-01-02 01:28:59,807 - base_logger - INFO - ```json
+{
+  "theorems": [
+    {
+      "name": "Euclidean Domain Theorem",
+      "statement": "A Euclidean domain is a ring in which there exists a Euclidean function that allows us to perform division with remainder.",
+      "proof": "Not provided",
+      "subject": "Algebra",
+      "domain": "Abstract Algebra",
+      "dependencies": [],
+      "type": "Theorem"
+    },
+    {
+      "name": "Principal Ideal Domain Theorem",
+      "statement": "A principal ideal domain is an integral domain in which every ideal is a principal ideal.",
+      "proof": "Not provided",
+      "subject": "Algebra",
+      "domain": "Abstract Algebra",
+      "dependencies": [],
+      "type": "Theorem"
+    },
+    {
+      "name": "Unique Factorization Domain Theorem",
+      "statement": "A unique factorization domain is an integral domain in which every non-zero element can be written as a product of irreducible elements, uniquely up to order and units.",
+      "proof": "Not provided",
+      "subject": "Algebra",
+      "domain": "Abstract Algebra",
+      "dependencies": [],
+      "type": "Theorem"
+    },
+    {
+      "name": "Definition of Polynomial Rings",
+      "statement": "A polynomial ring is a ring formed by polynomials in one or more variables with coefficients from a given ring.",
+      "proof": "Not provided",
+      "subject": "Algebra",
+      "domain": "Abstract Algebra",
+      "dependencies": [],
+      "type": "Definition"
+    },
+    {
+      "name": "Irreducibility Criteria Theorem",
+      "statement": "A polynomial over a field is irreducible if it cannot be factored into the product of two non-constant polynomials over the same field.",
+      "proof": "Not provided",
+      "subject": "Algebra",
+      "domain": "Abstract Algebra",
+      "dependencies": [],
+      "type": "Theorem"
+    },
+    {
+      "name": "Module Theory Introduction",
+      "statement": "A module is a generalization of the notion of a vector space over a field, but instead over a ring.",
+      "proof": "Not provided",
+      "subject": "Algebra",
+      "domain": "Abstract Algebra",
+      "dependencies": [],
+      "type": "Definition"
+    },
+    {
+      "name": "Exact Sequences-Projective, Injective, and Flat Modules Theorem",
+      "statement": "A short exact sequence of modules is a sequence of module homomorphisms between modules such that the image of one homomorphism is the kernel of the next.",
+      "proof": "Not provided",
+      "subject": "Algebra",
+      "domain": "Abstract Algebra",
+      "dependencies": [],
+      "type": "Theorem"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Example: Euclidean Domain",
+      "content": "The ring of integers ( \mathbb{Z} ) is a Euclidean domain with the Euclidean function being the absolute value function.",
+      "subject": "Algebra",
+      "domain": "Abstract Algebra",
+      "illustrates_theorems": ["Euclidean Domain Theorem"],
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Example: Principal Ideal Domain",
+      "content": "The ring of polynomials ( \mathbb{Z}[x] ) is a principal ideal domain.",
+      "subject": "Algebra",
+      "domain": "Abstract Algebra",
+      "illustrates_theorems": ["Principal Ideal Domain Theorem"],
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Example: Unique Factorization Domain",
+      "content": "The ring of integers ( \mathbb{Z} ) is a unique factorization domain.",
+      "subject": "Algebra",
+      "domain": "Abstract Algebra",
+      "illustrates_theorems": ["Unique Factorization Domain Theorem"],
+      "difficulty": "Easy"
+    }
+  ]
+}
+```
+2026-01-02 01:28:59,807 - base_logger - INFO - Extracted 0 theorems and 0 examples from chunk 6
+2026-01-02 01:28:59,807 - base_logger - INFO - Processing chunk 7/1608
+2026-01-02 01:29:00,116 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-01-02 01:29:39,379 - base_logger - ERROR - JSON parsing error: Expecting ',' delimiter: line 254 column 6 (char 7301)
+2026-01-02 01:29:39,379 - base_logger - INFO - ```json
+{
+  "theorems": [
+    {
+      "name": "Theorem 13.1",
+      "statement": "Basic Theory of Field Extensions",
+      "proof": "Not provided",
+      "subject": "Field Theory",
+      "domain": "Field extensions",
+      "dependencies": [],
+      "type": "Theorem"
+    },
+    {
+      "name": "Theorem 13.2",
+      "statement": "Algebraic Extensions",
+      "proof": "Not provided",
+      "subject": "Field Theory",
+      "domain": "Field extensions",
+      "dependencies": [],
+      "type": "Theorem"
+    },
+    {
+      "name": "Theorem 13.3",
+      "statement": "Classical Straightedge and Compass Constructions",
+      "proof": "Not provided",
+      "subject": "Field Theory",
+      "domain": "Classical constructions",
+      "dependencies": [],
+      "type": "Theorem"
+    },
+    {
+      "name": "Theorem 13.4",
+      "statement": "Splitting Fields and Algebraic Closures",
+      "proof": "Not provided",
+      "subject": "Field Theory",
+      "domain": "Splitting fields",
+      "dependencies": [],
+      "type": "Theorem"
+    },
+    {
+      "name": "Theorem 13.5",
+      "statement": "Separable and Inseparable Extensions",
+      "proof": "Not provided",
+      "subject": "Field Theory",
+      "domain": " field extensions",
+      "dependencies": [],
+      "type": "Theorem"
+    },
+    {
+      "name": "Theorem 13.6",
+      "statement": "Cyclotomic Polynomials and Extensions",
+      "proof": "Not provided",
+      "subject": "Field Theory",
+      "domain": " Cyclotomic polynomials",
+      "dependencies": [],
+      "type": "Theorem"
+    },
+    {
+      "name": "Theorem 13.7",
+      "statement": "Galois Theory",
+      "proof": "Not provided",
+      "subject": "Galois Theory",
+      "domain": "Galois theory",
+      "dependencies": [],
+      "type": "Theorem"
+    },
+    {
+      "name": "Theorem 13.8",
+      "statement": "Basic Definitions",
+      "proof": "Not provided",
+      "subject": "Galois Theory",
+      "domain": "Basic definitions",
+      "dependencies": [],
+      "type": "Theorem"
+    },
+    {
+      "name": "Theorem 13.9",
+      "statement": "The Fundamental Theorem of Galois Theory",
+      "proof": "Not provided",
+      "subject": "Galois Theory",
+      "domain": "Fundamental theorem",
+      "dependencies": [],
+      "type": "Theorem"
+    },
+    {
+      "name": "Theorem 13.10",
+      "statement": "Finite Fields",
+      "proof": "Not provided",
+      "subject": "Field Theory",
+      "domain": "Finite fields",
+      "dependencies": [],
+      "type": "Theorem"
+    },
+    {
+      "name": "Theorem 13.11",
+      "statement": "Composite Extensions and Simple Extensions",
+      "proof": "Not provided",
+      "subject": "Field Theory",
+      "domain": " field extensions",
+      "dependencies": [],
+      "type": "Theorem"
+    },
+    {
+      "name": "Theorem 13.12",
+      "statement": "Cyclotomic Extensions and Abelian Extensions over Q",
+      "proof": "Not provided",
+      "subject": "Field Theory",
+      "domain": " Cyclotomic extensions",
+      "dependencies": [],
+      "type": "Theorem"
+    },
+    {
+      "name": "Theorem 13.13",
+      "statement": "Galois Groups of Polynomials",
+      "proof": "Not provided",
+      "subject": "Galois Theory",
+      "domain": "Galois groups",
+      "dependencies": [],
+      "type": "Theorem"
+    },
+    {
+      "name": "Theorem 13.14",
+      "statement": "Solvable and Radical Extensions: lnsolvability ofthe Quintic",
+      "proof": "Not provided",
+      "subject": "Galois Theory",
+      "domain": "Radical extensions",
+      "dependencies": [],
+      "type": "Theorem"
+    },
+    {
+      "name": "Theorem 13.15",
+      "statement": "Computation of Galois Groups over Q",
+      "proof": "Not provided",
+      "subject": "Galois Theory",
+      "domain": "Galois groups computation",
+      "dependencies": [],
+      "type": "Theorem"
+    },
+    {
+      "name": "Theorem 13.16",
+      "statement": "Transcendental Extensions, Inseparable extensions, Infinite Galois Groups",
+      "proof": "Not provided",
+      "subject": "Field Theory",
+      "domain": "Infinite Galois groups",
+      "dependencies": [],
+      "type": "Theorem"
+    },
+    {
+      "name": "Theorem 15.1",
+      "statement": "Commutative Rings and Algebraic Geometry",
+      "proof": "Not provided",
+      "subject": "Commutative rings",
+      "domain": "Algebraic geometry",
+      "dependencies": [],
+      "type": "Theorem"
+    },
+    {
+      "name": "Theorem 15.2",
+      "statement": "Noetherian Rings and Affine Algebraic Sets",
+      "proof": "Not provided",
+      "subject": "Commutative rings",
+      "domain": "Affine algebraic sets",
+      "dependencies": [],
+      "type": "Theorem"
+    },
+    {
+      "name": "Theorem 15.3",
+      "statement": "Radicals and Affine Varieties",
+      "proof": "Not provided",
+      "subject": "Algebraic geometry",
+      "domain": "Radicals",
+      "dependencies": [],
+      "type": "Theorem"
+    },
+    {
+      "name": "Theorem 15.4",
+      "statement": "Integral Extensions and Hilbert's Nullstellensatz",
+      "proof": "Not provided",
+      "subject": "Commutative rings",
+      "domain": " Integral extensions",
+      "dependencies": [],
+      "type": "Theorem"
+    },
+    {
+      "name": "Theorem 16.1",
+      "statement": "Artinian Rings, Discrete Valuation Rings, and Dedekind Domains",
+      "proof": "Not provided",
+      "subject": "Commutative rings",
+      "domain": "Artinian rings",
+      "dependencies": [],
+      "type": "Theorem"
+    },
+    {
+      "name": "Theorem 17.1",
+      "statement": "Introduction to Homological Algebra and Group Cohomology",
+      "proof": "Not provided",
+      "subject": "Homological algebra",
+      "domain": "Group cohomology",
+      "dependencies": [],
+      "type": "Theorem"
+    },
+    {
+      "name": "Theorem 17.2",
+      "statement": "Introduction to Homological Algebra-Ext and Tor",
+      "proof": "Not provided",
+      "subject": "Homological algebra",
+      "domain": "Ext and Tor",
+      "dependencies": [],
+      "type": "Theorem"
+    },
+    {
+      "name": "Theorem 17.3",
+      "statement": "Introduction to Homological Algebra-Ext and Tor",
+      "proof": "Not provided",
+      "subject": "Homological algebra",
+      "domain": "Ext and Tor",
+      "dependencies": [],
+      "type": "Theorem"
+    },
+    {
+      "name": "Theorem 17.4",
+      "statement": "Introduction to Homological Algebra-Ext and Tor",
+      "proof": "Not provided",
+      "subject": "Homological algebra",
+      "domain": "Ext and Tor",
+      "dependencies": [],
+      "type": "Theorem"
+    },
+    {
+      "name": "Theorem 17.5",
+      "statement": "Introduction to Homological Algebra-Ext and Tor",
+      "proof": "Not provided",
+      "subject": "Homological algebra",
+      "domain": "Ext and Tor",
+      "dependencies": [],
+      "type": "Theorem"
+    },
+    {
+      "name": "Theorem 17.6",
+      "statement": "Introduction to Homological Algebra-Ext and Tor",
+      "proof": "Not provided",
+      "subject": "Homological algebra",
+      "domain": "Ext and Tor",
+      "dependencies": [],
+      "type": "Theorem"
+    },
+    {
+      "name": "Theorem 17.7",
+      "statement": "Introduction to Homological Algebra-Ext and Tor",
+      "proof": "Not provided",
+      "subject": "Homological algebra",
+      "domain": "Ext and Tor",
+      "dependencies": [],
+      "type": "Theorem"
+    },
+    {
+      "name": "Theorem 17.8",
+      "statement": "Introduction to Homological Algebra-Ext and Tor",
+      "proof": "Not provided",
+      "subject": "Homological algebra",
+      "domain": "Ext and
+2026-01-02 01:29:39,379 - base_logger - INFO - Extracted 0 theorems and 0 examples from chunk 7
+2026-01-02 01:29:39,379 - base_logger - INFO - Processing chunk 8/1608
+2026-01-02 01:29:39,818 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-01-02 01:29:43,730 - base_logger - INFO - there is 2 entire
+2026-01-02 01:29:43,731 - base_logger - INFO - Extracted 1 theorems and 1 examples from chunk 8
+2026-01-02 01:29:43,731 - base_logger - INFO - Processing chunk 9/1608
+2026-01-02 01:29:43,856 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-01-02 01:29:44,130 - base_logger - INFO - there is 2 entire
+2026-01-02 01:29:44,130 - base_logger - INFO - Extracted 0 theorems and 0 examples from chunk 9
+2026-01-02 01:29:44,130 - base_logger - INFO - Processing chunk 10/1608
+2026-01-02 01:29:44,423 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-01-02 01:29:44,700 - base_logger - INFO - there is 2 entire
+2026-01-02 01:29:44,700 - base_logger - INFO - Extracted 0 theorems and 0 examples from chunk 10
+2026-01-02 01:29:44,700 - base_logger - INFO - Processing chunk 11/1608
+2026-01-02 01:29:44,829 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-01-02 01:29:45,065 - base_logger - INFO - there is 2 entire
+2026-01-02 01:29:45,065 - base_logger - INFO - Extracted 0 theorems and 0 examples from chunk 11
+2026-01-02 01:29:45,065 - base_logger - INFO - Processing chunk 12/1608
+2026-01-02 01:29:45,330 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-01-02 01:29:45,680 - base_logger - INFO - there is 2 entire
+2026-01-02 01:29:45,680 - base_logger - INFO - Extracted 0 theorems and 0 examples from chunk 12
+2026-01-02 01:29:45,680 - base_logger - INFO - Processing chunk 13/1608
+2026-01-02 01:29:45,966 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-01-02 01:29:54,532 - base_logger - ERROR - JSON parsing error: Invalid \escape: line 5 column 104 (char 170)
+2026-01-02 01:29:54,532 - base_logger - INFO - ```json
+{
+  "theorems": [
+    {
+      "name": "Theorem about set mapping",
+      "statement": "If (A_1) and (A_2) are disjoint subsets of a set (A), then the function (f: A \\to \{0, 1\}) defined by (f(a) = 0) for (a \in A_1) and (f(a) = 1) for (a \in A_2) is well-defined and unique.",
+      "proof": "The function (f) is well-defined because (A_1) and (A_2) are disjoint, so each element of (A) maps to either 0 or 1 without ambiguity. The uniqueness of (f) follows from the fact that if there were another function (g: A \\to \{0, 1\}) with the same properties, then for every (a \in A), (g(a)) would have to be equal to (f(a)), implying (f = g).",
+      "subject": "Set theory and functions",
+      "domain": "Set theory",
+      "dependencies": [],
+      "type": "Theorem"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Example of a function with domain partitioned into two disjoint sets",
+      "content": "Let (A = \{1, 2, 3, 4\}), (A_1 = \{1, 2\}), and (A_2 = \{3, 4\}). Define the function (f: A \\to \{0, 1\}) by (f(1) = f(2) = 0) and (f(3) = f(4) = 1). This function is well-defined and maps (A_1) to 0 and (A_2) to 1.",
+      "subject": "Set theory and functions",
+      "domain": "Set theory",
+      "illustrates_theorems": ["Theorem about set mapping"],
+      "difficulty": "Easy"
+    }
+  ]
+}
+```
+2026-01-02 01:29:54,532 - base_logger - INFO - Extracted 0 theorems and 0 examples from chunk 13
+2026-01-02 01:29:54,532 - base_logger - INFO - Processing chunk 14/1608
+2026-01-02 01:29:54,672 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-01-02 01:30:00,993 - base_logger - ERROR - JSON parsing error: Invalid \escape: line 25 column 30 (char 709)
+2026-01-02 01:30:00,993 - base_logger - INFO - {
+"theorems": [
+    {
+        "name": "Theorem",
+        "statement": "If (f : A \\to B) is bijective, then it is both injective and surjective.",
+        "proof": "Not provided",
+        "subject": "Algebra",
+        "domain": "Set Theory",
+        "dependencies": [],
+        "type": "Theorem"
+    },
+    {
+        "name": "Corollary",
+        "statement": "If (f : A \\to B) is injective and surjective, then it is bijective.",
+        "proof": "Not provided",
+        "subject": "Algebra",
+        "domain": "Set Theory",
+        "dependencies": ["Theorem"],
+        "type": "Corollary"
+    }
+],
+"examples": [
+    {
+        "name": "Example: Inverse of a Bijective Function",
+        "content": "Let (f : \{1, 2, 3\} \\to \{a, b, c\}) be defined by (f(1) = a), (f(2) = b), and (f(3) = c). Find the inverse function (g : B \\to A) such that (g(f(x)) = x) for all (x \in A) and (f(g(y)) = y) for all (y \in B).",
+        "subject": "Set Theory",
+        "domain": "Function Theory",
+        "illustrates_theorems": ["Theorem", "Corollary"],
+        "difficulty": "Medium"
+    }
+]
+}
+2026-01-02 01:30:00,993 - base_logger - INFO - Extracted 0 theorems and 0 examples from chunk 14
+2026-01-02 01:30:00,993 - base_logger - INFO - Processing chunk 15/1608
+2026-01-02 01:30:01,275 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-01-02 01:30:05,753 - base_logger - ERROR - JSON parsing error: Invalid \escape: line 16 column 27 (char 360)
+2026-01-02 01:30:05,753 - base_logger - INFO - {
+"theorems": [
+{
+    "name": "Theorem 2.1",
+    "statement": "A permutation of a set ( A ) is simply a bijection from ( A ) to itself.",
+    "proof": "Not provided",
+    "subject": "Algebra",
+    "domain": "Permutations and Bijections",
+    "dependencies": [],
+    "type": "Theorem"
+}
+],
+"examples": [
+{
+    "name": "Example 2.1.1",
+    "content": "Let ( A = \{1, 2, 3\} ). The permutation ( (1 \, 2 \, 3) ) can be written as the bijection ( f: A \\to A ) where ( f(1) = 2 ), ( f(2) = 3 ), and ( f(3) = 1 ).",
+    "subject": "Permutations and Bijections",
+    "domain": "Algebra",
+    "illustrates_theorems": ["Theorem 2.1"],
+    "difficulty": "Easy"
+}
+]
+}
+2026-01-02 01:30:05,753 - base_logger - INFO - Extracted 0 theorems and 0 examples from chunk 15
+2026-01-02 01:30:05,753 - base_logger - INFO - Processing chunk 16/1608
+2026-01-02 01:30:06,056 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-01-02 01:30:09,032 - base_logger - INFO - there is 2 entire
+2026-01-02 01:30:09,032 - base_logger - WARNING - Invalid type 'Theorem, Lemma, Proposition, Corollary, Conjecture, Definition, property or Hypothesis', defaulting to 'Theorem'
+2026-01-02 01:30:09,032 - base_logger - WARNING - Invalid difficulty 'N/A', defaulting to 'Medium'
+2026-01-02 01:30:09,032 - base_logger - INFO - Extracted 1 theorems and 1 examples from chunk 16
+2026-01-02 01:30:09,032 - base_logger - INFO - Processing chunk 17/1608
+2026-01-02 01:30:09,298 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-01-02 01:30:15,319 - base_logger - ERROR - JSON parsing error: Invalid \escape: line 5 column 36 (char 118)
+2026-01-02 01:30:15,319 - base_logger - INFO - ```json
+{
+    "theorems": [
+        {
+            "name": "Theorem (Euclidean Algorithm)",
+            "statement": "If (a, b \in \mathbb{Z} - \{0\}), then there exists a sequence of quotients and remainders as described, where the last nonzero remainder (r_n) is the greatest common divisor (gcd) of (a) and (b).",
+            "proof": "Not provided",
+            "subject": "Number Theory",
+            "domain": "Algebra",
+            "dependencies": ["Theorem (Division Algorithm)"],
+            "type": "Theorem"
+        }
+    ],
+    "examples": [
+        {
+            "name": "Example: Euclidean Algorithm for 57970 and 10353",
+            "content": "57970 = (5)10353 + 6205\\n10353 = (1)6205 + 4148\\n6205 = (1)4148 + 2057\\n4148 = (2)2057 + 34\\n2057 = (60)34 + 17\\n34 = (2)17",
+            "subject": "Number Theory",
+            "domain": "Algebra",
+            "illustrates_theorems": ["Theorem (Euclidean Algorithm)"],
+            "difficulty": "Medium"
+        }
+    ]
+}
+```
+2026-01-02 01:30:15,319 - base_logger - INFO - Extracted 0 theorems and 0 examples from chunk 17
+2026-01-02 01:30:15,319 - base_logger - INFO - Processing chunk 18/1608
+2026-01-02 01:30:15,670 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-01-02 01:30:21,796 - base_logger - ERROR - JSON parsing error: Invalid \escape: line 5 column 168 (char 243)
+2026-01-02 01:30:21,796 - base_logger - INFO - ```json
+{
+  "theorems": [
+    {
+      "name": "Theorem on the Euclidean Algorithm",
+      "statement": "If (a) and (b) are integers with (a > b), then the greatest common divisor of (a) and (b) is the same as the greatest common divisor of (b) and (a \mod b).",
+      "proof": "Not provided",
+      "subject": "Number Theory",
+      "domain": "Algebra",
+      "dependencies": ["Theorem on the Euclidean Algorithm"],
+      "type": "Theorem"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Example: Solving for the Greatest Common Divisor using the Euclidean Algorithm",
+      "content": "Given (a = 57970) and (b = 10353), we use the Euclidean Algorithm to find their greatest common divisor (GCD). The GCD is found to be 17. The steps involve repeatedly applying the division algorithm until the remainder is zero. The last non-zero remainder is the GCD. The solution to (ax + by = (a, b)) is also provided as an example of how the GCD can be expressed as a linear combination of (a) and (b).",
+      "subject": "Number Theory",
+      "domain": "Algebra",
+      "illustrates_theorems": ["Theorem on the Euclidean Algorithm"],
+      "difficulty": "Medium"
+    }
+  ]
+}
+```
+2026-01-02 01:30:21,797 - base_logger - INFO - Extracted 0 theorems and 0 examples from chunk 18
+2026-01-02 01:30:21,797 - base_logger - INFO - Processing chunk 19/1608
+2026-01-02 01:30:21,951 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-01-02 01:30:26,190 - base_logger - ERROR - JSON parsing error: Invalid \escape: line 16 column 96 (char 508)
+2026-01-02 01:30:26,190 - base_logger - INFO - {
+"theorems": [
+{
+    "name": "Theorem ( Fundamental Theorem of Arithmetic )",
+    "statement": "Every integer greater than 1 can be uniquely factored into primes, up to the order of the factors.",
+    "proof": "Not provided",
+    "subject": "Number Theory",
+    "domain": "Arithmetic",
+    "dependencies": [],
+    "type": "Theorem"
+}
+],
+"examples": [
+{
+    "name": "Example: Unique Factorization of 1852423848",
+    "content": "Given ( n = 1852423848 ), it can be uniquely factored into primes as ( n = 2^3 \cdot 3^2 \cdot 19331^2 ). This factorization is unique up to the order of the factors.",
+    "subject": "Number Theory",
+    "domain": "Arithmetic",
+    "illustrates_theorems": ["Theorem ( Fundamental Theorem of Arithmetic )"],
+    "difficulty": "Easy"
+}
+]
+}
+2026-01-02 01:30:26,190 - base_logger - INFO - Extracted 0 theorems and 0 examples from chunk 19
+2026-01-02 01:30:26,190 - base_logger - INFO - Processing chunk 20/1608
+2026-01-02 01:30:26,500 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-01-02 01:30:41,576 - base_logger - ERROR - JSON parsing error: Invalid \escape: line 14 column 217 (char 698)
+2026-01-02 01:30:41,576 - base_logger - INFO - ```json
+{
+  "theorems": [
+    {
+      "name": "Theorem on GCD and LCM",
+      "statement": "For any two integers (a) and (b), their greatest common divisor (GCD) and least common multiple (LCM) satisfy the relationship ( \\text{GCD}(a, b) \\times \\text{LCM}(a, b) = a \\times b ).",
+      "proof": "Not provided",
+      "subject": "Number Theory",
+      "domain": "Arithmetic",
+      "dependencies": [],
+      "type": "Theorem"
+    },
+    {
+      "name": "Theorem on Euclidean Algorithm",
+      "statement": "The Euclidean algorithm is an efficient method for computing the greatest common divisor (GCD) of two integers (a) and (b). It is based on the principle that (\\text{GCD}(a, b) = \\text{GCD}(b, a \mod b)).",
+      "proof": "Not provided",
+      "subject": "Number Theory",
+      "domain": "Algorithms",
+      "dependencies": [],
+      "type": "Theorem"
+    },
+    {
+      "name": "Definition of Euler's Totient Function",
+      "statement": "For a positive integer (n), the Euler's totient function (\phi(n)) is defined as the number of integers from 1 to (n) that are coprime to (n). It can be expressed as (\phi(n) = n \prod_{p|n} \left(1 - \frac{1}{p}\right)), where the product is over all distinct prime numbers dividing (n).",
+      "proof": "Not provided",
+      "subject": "Number Theory",
+      "domain": "Arithmetic",
+      "dependencies": [],
+      "type": "Theorem"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Example on GCD and LCM",
+      "content": "In the example above, (a = 57970) and (b = 10353) can be factored as (a = 2 \cdot 5 \cdot 11 \cdot 17 \cdot 31) and (b = 3 \cdot 7 \cdot 17 - 29). From this, we can immediately conclude that their greatest common divisor is 17. Note, however, that for large integers it is extremely difficult to determine their prime factorizations (several common codes in current use are based on this difficulty, in fact), so that this is not an effective method to determine greatest common divisors in general. The Euclidean Algorithm will produce greatest common divisors quite rapidly without the need for the prime factorization of (a) and (b).",
+      "subject": "Number Theory",
+      "domain": "Arithmetic",
+      "illustrates_theorems": ["Theorem on GCD and LCM", "Theorem on Euclidean Algorithm"],
+      "difficulty": "Medium"
+    },
+    {
+      "name": "Example on Euler's Totient Function",
+      "content": "For (n = p^k), the formula for (\phi(n)) is given by (\phi(p^k) = p^{k-1}(p - 1)). For example, (\phi(12) = \phi(2^2 \cdot 3) = 2^{2-1}(2 - 1) \cdot (3 - 1) = 4.)",
+      "subject": "Number Theory",
+      "domain": "Arithmetic",
+      "illustrates_theorems": ["Definition of Euler's Totient Function"],
+      "difficulty": "Easy"
+    }
+  ]
+}
+```
+2026-01-02 01:30:41,576 - base_logger - INFO - Extracted 0 theorems and 0 examples from chunk 20
+2026-01-02 01:30:41,576 - base_logger - INFO - Processing chunk 21/1608
+2026-01-02 01:30:41,855 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-01-02 01:31:20,389 - base_logger - ERROR - JSON parsing error: Invalid \escape: line 23 column 43 (char 1062)
+2026-01-02 01:31:20,389 - base_logger - INFO - ```json
+{
+  "theorems": [
+    {
+      "name": "Theorem 3",
+      "statement": "If (n) is composite, then there are integers (a) and (b) such that (n) divides (ab) but (n) does not divide either (a) or (b).",
+      "proof": "Not provided",
+      "subject": "Number Theory",
+      "domain": "Divisibility and Composite Numbers",
+      "dependencies": [],
+      "type": "Theorem"
+    },
+    {
+      "name": "Theorem 4",
+      "statement": "Let (a), (b) and (N) be fixed integers with (a) and (b) nonzero, and let (d = (a, b)) be the greatest common divisor of (a) and (b). Suppose (x_0) and (y_0) are particular solutions to (ax + by = N) (i.e., (ax_0 + by_0 = N)). Prove that for any integer (t), the integers (X = x_0 + dt) and (Y = y_0 - d t) are also solutions to (ax + by = N) (this is in fact the general solution).",
+      "proof": "Not provided",
+      "subject": "Number Theory",
+      "domain": "Diophantine Equations",
+      "dependencies": ["Theorem 3"],
+      "type": "Theorem"
+    },
+    {
+      "name": "Theorem 5",
+      "statement": "Determine the value ( \phi(n) ) for each integer ( n \leq 30 ) where ( \phi ) denotes the Euler's totient function.",
+      "proof": "Not provided",
+      "subject": "Number Theory",
+      "domain": "Euler's Totient Function",
+      "dependencies": [],
+      "type": "Theorem"
+    },
+    {
+      "name": "Theorem 6",
+      "statement": "Prove the Well Ordering Property of ( \mathbb{Z} ) by induction and prove the minimal element is unique.",
+      "proof": "Not provided",
+      "subject": "Set Theory",
+      "domain": "Ordering and Induction",
+      "dependencies": [],
+      "type": "Theorem"
+    },
+    {
+      "name": "Theorem 7",
+      "statement": "If (p) is a prime, prove that there do not exist nonzero integers (a) and (b) such that (a^2 = pb^2) (i.e., ( \sqrt{p} ) is not a rational number).",
+      "proof": "Not provided",
+      "subject": "Number Theory",
+      "domain": "Irrationality of Square Roots",
+      "dependencies": ["Theorem 6"],
+      "type": "Theorem"
+    },
+    {
+      "name": "Theorem 8",
+      "statement": "Let (p) be a prime, (n \in \mathbb{Z}^+). Find a formula for the largest power of (p) which divides (n!) (it involves the greatest integer function).",
+      "proof": "Not provided",
+      "subject": "Number Theory",
+      "domain": "Factorials and Prime Factorization",
+      "dependencies": ["Theorem 7"],
+      "type": "Theorem"
+    },
+    {
+      "name": "Theorem 9",
+      "statement": "Write a computer program to determine the greatest common divisor ((a, b)) of two integers (a) and (b) and to express ((a, b)) in the form (ax + by) for some integers (x) and (y).",
+      "proof": "Not provided",
+      "subject": "Computer Science and Number Theory",
+      "domain": "Algorithms and GCD",
+      "dependencies": [],
+      "type": "Theorem"
+    },
+    {
+      "name": "Theorem 10",
+      "statement": "Prove for any given positive integer (N) there exist only finitely many integers (n) with (\phi(n) = N) where (\phi) denotes Euler's totient function. Conclude in particular that (\phi(n)) tends to infinity as (n) tends to infinity.",
+      "proof": "Not provided",
+      "subject": "Number Theory",
+      "domain": "Properties of Euler's Totient Function",
+      "dependencies": ["Theorem 9"],
+      "type": "Theorem"
+    },
+    {
+      "name": "Theorem 11",
+      "statement": "Prove that if (d) divides (n), then (\phi(d)) divides (\phi(n)) where (\phi) denotes Euler's totient function.",
+      "proof": "Not provided",
+      "subject": "Number Theory",
+      "domain": "Properties of Euler's Totient Function",
+      "dependencies": ["Theorem 10"],
+      "type": "Theorem"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Example: Divisibility by Composite Numbers",
+      "content": "If (n) is composite, there exist integers (a) and (b) such that (n) divides (ab) but (n) does not divide either (a) or (b). For example, if (n = 6), then (a = 2) and (b = 3) satisfy the condition because (6) divides (2 \cdot 3 = 6) but (6) does not divide (2) or (3).",
+      "subject": "Number Theory",
+      "domain": "Divisibility and Composite Numbers",
+      "illustrates_theorems": ["Theorem 3"],
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Example: Solution to Linear Diophantine Equation",
+      "content": "Let (a = 2), (b = 3) and (N = 7). The greatest common divisor ((2, 3) = 1). A particular solution to the equation (2x + 3y = 7) is (x_0 = 2) and (y_0 = 1). Therefore, the general solution is given by (X = 2 + 3t) and (Y = 1 - 2t) for any integer (t). For example, if (t = 0), then (X = 2) and (Y = 1); if (t = 1), then (X = 5) and (Y = -1).",
+      "subject": "Number Theory",
+      "domain": "Diophantine Equations",
+      "illustrates_theorems": ["Theorem 4"],
+      "difficulty": "Medium"
+    },
+    {
+      "name": "Example: Euler's Totient Function for Small Numbers",
+      "content": "Calculate (\phi(n)) for (n = 1, 2, 3, 4, 5): (\phi(1) = 1), (\phi(2) = 1), (\phi(3) = 2), (\phi(4) = 2), (\phi(5) = 4).",
+      "subject": "Number Theory",
+      "domain": "Euler's Totient Function",
+      "illustrates_theorems": ["Theorem 5"],
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Example: Well Ordering Property of Integers",
+      "content": "The set of integers (\mathbb{Z}) is well-ordered because every non-empty subset has a least element. For example, the smallest positive integer is 1 and the smallest negative integer is -1. The minimal element in any subset is unique. For instance, the smallest element in the subset (\{3, 5, 7\}) is 3.",
+      "subject": "Set Theory",
+      "domain": "Ordering and Induction",
+      "illustrates_theorems": ["Theorem 6"],
+      "difficulty": "Easy"
+    },
+    {
+      "name": "Example: Irrationality of Square Root of a Prime Number",
+      "content": "Prove that (\sqrt{p}) is irrational for any prime (p). Assume the contrary, that (\sqrt{p} = \frac{a}{b}) where (a) and (b) are coprime integers. Then (p b^2 = a^2), implying (p) divides (a^2). Since (p) is prime, (p) must divide (a). Let (a = p k) for some integer (k). Substituting back, we get (p b^2 = (p k)^2 = p^2 k^2), so (b^2 = p k^2). This implies (p) divides (b^2), and hence (p) divides (b). But this contradicts the assumption that (a) and (b) are coprime. Therefore, (\sqrt{p}) is irrational.",
+      "subject": "Number Theory",
+      "domain": "Irrationality of Square Roots",
+      "illustrates_theorems": ["Theorem 7"],
+      "difficulty": "Medium"
+    },
+2026-01-02 01:31:20,389 - base_logger - INFO - Extracted 0 theorems and 0 examples from chunk 21
+2026-01-02 01:31:20,389 - base_logger - INFO - Processing chunk 22/1608
+2026-01-02 01:31:20,665 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-01-02 01:31:26,165 - base_logger - ERROR - JSON parsing error: Invalid \escape: line 16 column 157 (char 590)
+2026-01-02 01:31:26,165 - base_logger - INFO - ```json
+{
+  "theorems": [
+    {
+      "name": "Theorem 1",
+      "statement": "There are precisely (n) distinct equivalence classes mod (n), namely (0, 1, 2, \\ldots, n-1).",
+      "proof": "Not provided",
+      "subject": "Number Theory",
+      "domain": "Equivalence Relations and Modular Arithmetic",
+      "dependencies": [],
+      "type": "Theorem"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Example: Equivalence Classes Modulo 3",
+      "content": "Consider the equivalence classes modulo 3. The set of integers (\\mathbb{Z}) can be partitioned into three distinct equivalence classes: (\{0, 3, 6, 9, \\ldots\}), (\{1, 4, 7, 10, \\ldots\}), and (\{2, 5, 8, 11, \\ldots\}). Each integer belongs to exactly one of these classes based on its remainder when divided by 3.",
+      "subject": "Number Theory",
+      "domain": "Equivalence Relations and Modular Arithmetic",
+      "illustrates_theorems": ["Theorem 1"],
+      "difficulty": "Easy"
+    }
+  ]
+}
+```
+2026-01-02 01:31:26,165 - base_logger - INFO - Extracted 0 theorems and 0 examples from chunk 22
+2026-01-02 01:31:26,165 - base_logger - INFO - Processing chunk 23/1608
+2026-01-02 01:31:26,444 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-01-02 01:31:31,711 - base_logger - INFO - there is 2 entire
+2026-01-02 01:31:31,711 - base_logger - INFO - Extracted 1 theorems and 1 examples from chunk 23
+2026-01-02 01:31:31,711 - base_logger - INFO - Processing chunk 24/1608
+2026-01-02 01:31:31,853 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"

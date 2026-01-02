@@ -118,20 +118,14 @@ def extract_from_text(llm_chain, text: str, logger= logger) :
     return list(unique_theorems), list(unique_examples)
 
 def clean_json_output(llm_output):
-    """Clean LLM output to make it valid JSON"""
     text = llm_output.strip()
     
-    # Remove markdown code blocks
-    if text.startswith("```json"):
-        text = text[7:-3].strip()
-    elif text.startswith("```"):
-        text = text[3:-3].strip()
-    
-    # Fix common JSON issues
     text = text.replace('\\n', '\\\\n')  # Escape newlines
     text = text.replace('\\t', '\\\\t')  # Escape tabs
-    text = text.replace('\\"', '"')  # Unescape quotes
-    
+    text = text.replace('\\"', '"')  
+    text = text.replace('\\(', '(')  # Unescape bitch 1
+    text = text.replace('\\)', ')')  # Unescape bitch 2
+
     # Remove trailing commas in arrays/objects
     import re
     text = re.sub(r',\s*}', '}', text)
@@ -142,8 +136,7 @@ def clean_json_output(llm_output):
 def extract_from_chunk(llm_chain, chunk: str, logger= logger) :
         try:
             response = llm_chain.invoke({"text": chunk})
-            print( response)
-            theorems, examples =  parse_response(response= response,logger= logger)
+            theorems, examples =  parse_response(response= clean_json_output(response),logger= logger)
             return theorems, examples
         except Exception as e:
             logger.error(f"Error extracting from chunk: {e}")
@@ -181,6 +174,7 @@ def parse_response(response:str, logger= logger):
     
     except json.JSONDecodeError as e:
         logger.error(f"JSON parsing error: {e}")
+        logger.info(response)
         return [], []
     except Exception as e:
         logger.error(f"Error parsing response: {e}")
