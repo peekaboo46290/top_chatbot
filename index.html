@@ -11,14 +11,14 @@
 
     <div class="chat-container">
         <div class="chat-header">
-            <h1>Algebra Assistant</h1>
+            <h1>🤖 GraphRAG Assistant</h1>
             <div class="status" id="status">Connecting...</div>
         </div>
         
         <div class="chat-messages" id="chatMessages">
             <div class="message assistant">
                 <div class="message-content">
-                    Hello! I'm your Algebra assistant. Ask me anything!
+                    Hello! I'm your GraphRAG-powered assistant. Ask me anything!
                 </div>
             </div>
         </div>
@@ -48,6 +48,9 @@
 
     <script>
         let API_URL = localStorage.getItem('backendUrl') || 'http://localhost:8000';
+        
+        // Remove trailing slash if present
+        API_URL = API_URL.replace(/\/$/, '');
 
         function openConfig() {
             document.getElementById('configModal').classList.add('active');
