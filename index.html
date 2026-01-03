@@ -7,125 +7,146 @@
     <link rel="stylesheet" href="stylesheet.css">
 </head>
 <body>
+    <div class="config-button" onclick="openConfig()">⚙️ Settings</div>
+
     <div class="chat-container">
         <div class="chat-header">
-            Algebra Chatbot
+            <h1>🤖 GraphRAG Assistant</h1>
+            <div class="status" id="status">Connecting...</div>
         </div>
         
-        <div class="config-section">
-            <label for="apiUrl">Backend API URL:</label>
-            <input type="text" id="apiUrl" placeholder="https://your-backend-url.ngrok-free.app">
-        </div>
-
         <div class="chat-messages" id="chatMessages">
-            <div class="message bot">
+            <div class="message assistant">
                 <div class="message-content">
-                    Hello! I'm powered by GraphRAG. Ask me anything!
+                    Hello! I'm your GraphRAG-powered assistant. Ask me anything!
                 </div>
             </div>
         </div>
-
+        
         <div class="chat-input-container">
             <input 
                 type="text" 
                 id="messageInput" 
                 placeholder="Type your message..."
-                onkeypress="if(event.key === 'Enter') sendMessage()"
+                onkeypress="handleKeyPress(event)"
             >
             <button id="sendButton" onclick="sendMessage()">Send</button>
         </div>
     </div>
 
-    <script>
-        const chatMessages = document.getElementById('chatMessages');
-        const messageInput = document.getElementById('messageInput');
-        const sendButton = document.getElementById('sendButton');
-        const apiUrlInput = document.getElementById('apiUrl');
+    <div class="modal" id="configModal">
+        <div class="modal-content">
+            <h2>Backend Configuration</h2>
+            <label>Backend URL:</label>
+            <input type="text" id="backendUrl" placeholder="https://your-ngrok-url.ngrok.io">
+            <div class="modal-buttons">
+                <button class="cancel-btn" onclick="closeConfig()">Cancel</button>
+                <button class="save-btn" onclick="saveConfig()">Save</button>
+            </div>
+        </div>
+    </div>
 
-        // Load saved API URL
-        const savedUrl = localStorage.getItem('apiUrl');
-        if (savedUrl) {
-            apiUrlInput.value = savedUrl;
+    <script>
+        let API_URL = localStorage.getItem('backendUrl') || 'http://localhost:8000';
+
+        function openConfig() {
+            document.getElementById('configModal').classList.add('active');
+            document.getElementById('backendUrl').value = API_URL;
         }
 
-        apiUrlInput.addEventListener('change', () => {
-            localStorage.setItem('apiUrl', apiUrlInput.value);
-        });
+        function closeConfig() {
+            document.getElementById('configModal').classList.remove('active');
+        }
+
+        function saveConfig() {
+            API_URL = document.getElementById('backendUrl').value;
+            localStorage.setItem('backendUrl', API_URL);
+            closeConfig();
+            checkBackendStatus();
+        }
+
+        async function checkBackendStatus() {
+            try {
+                const response = await fetch(`${API_URL}/health`);
+                if (response.ok) {
+                    document.getElementById('status').textContent = '✓ Connected';
+                } else {
+                    document.getElementById('status').textContent = '✗ Connection failed';
+                }
+            } catch (error) {
+                document.getElementById('status').textContent = '✗ Disconnected - Check settings';
+            }
+        }
+
+        function addMessage(content, isUser, sources = []) {
+            const messagesDiv = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'assistant'}`;
+            
+            let html = `<div class="message-content">${content}`;
+            
+            if (sources && sources.length > 0) {
+                html += `<div class="sources">📚 Sources: ${sources.map(s => s.name || 'Knowledge Graph').join(', ')}</div>`;
+            }
+            
+            html += `</div>`;
+            messageDiv.innerHTML = html;
+            
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
 
         async function sendMessage() {
-            const message = messageInput.value.trim();
-            const apiUrl = apiUrlInput.value.trim();
-
+            const input = document.getElementById('messageInput');
+            const sendButton = document.getElementById('sendButton');
+            const message = input.value.trim();
+            
             if (!message) return;
-            if (!apiUrl) {
-                alert('Please enter your backend API URL');
-                return;
-            }
-
-            // Add user message
-            addMessage(message, 'user');
-            messageInput.value = '';
+            
+            addMessage(message, true);
+            input.value = '';
             sendButton.disabled = true;
-
-            // Add loading indicator
-            const loadingDiv = document.createElement('div');
-            loadingDiv.className = 'message bot';
-            loadingDiv.innerHTML = `
-                <div class="message-content">
-                    <span class="loading"></span>
-                    <span class="loading"></span>
-                    <span class="loading"></span>
-                </div>
-            `;
-            chatMessages.appendChild(loadingDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-
+            
+            addMessage('<span class="loading"></span> Thinking...', false);
+            
             try {
-                const response = await fetch(`${apiUrl}/chat`, {
+                const response = await fetch(`${API_URL}/chat`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
                         message: message,
-                        conversation_id: 'web-chat'
+                        conversation_id: 'session_' + Date.now()
                     })
                 });
-
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                
+                const messagesDiv = document.getElementById('chatMessages');
+                messagesDiv.removeChild(messagesDiv.lastChild);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    addMessage(data.response, false, data.sources);
+                } else {
+                    addMessage('Sorry, I encountered an error. Please check your backend connection.', false);
                 }
-
-                const data = await response.json();
-                
-                // Remove loading indicator
-                loadingDiv.remove();
-                
-                // Add bot response
-                addMessage(data.response, 'bot');
             } catch (error) {
-                loadingDiv.remove();
-                addMessage('Error: Could not connect to backend. Please check your API URL.', 'bot');
-                console.error('Error:', error);
+                const messagesDiv = document.getElementById('chatMessages');
+                messagesDiv.removeChild(messagesDiv.lastChild);
+                addMessage('Error: Could not connect to backend. Please check settings.', false);
             }
-
+            
             sendButton.disabled = false;
-            messageInput.focus();
         }
 
-        function addMessage(text, sender) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${sender}`;
-            messageDiv.innerHTML = `<div class="message-content">${escapeHtml(text)}</div>`;
-            chatMessages.appendChild(messageDiv);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
         }
 
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
+        checkBackendStatus();
+        setInterval(checkBackendStatus, 30000);
     </script>
 </body>
 </html>
