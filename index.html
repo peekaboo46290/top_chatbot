@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GraphRAG Chatbot</title>
+    <link rel="stylesheet" href="stylesheet.css">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            Algebra Chatbot
+        </div>
+        
+        <div class="config-section">
+            <label for="apiUrl">Backend API URL:</label>
+            <input type="text" id="apiUrl" placeholder="https://your-backend-url.ngrok-free.app">
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot">
+                <div class="message-content">
+                    Hello! I'm powered by GraphRAG. Ask me anything!
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-input-container">
+            <input 
+                type="text" 
+                id="messageInput" 
+                placeholder="Type your message..."
+                onkeypress="if(event.key === 'Enter') sendMessage()"
+            >
+            <button id="sendButton" onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        const chatMessages = document.getElementById('chatMessages');
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+        const apiUrlInput = document.getElementById('apiUrl');
+
+        // Load saved API URL
+        const savedUrl = localStorage.getItem('apiUrl');
+        if (savedUrl) {
+            apiUrlInput.value = savedUrl;
+        }
+
+        apiUrlInput.addEventListener('change', () => {
+            localStorage.setItem('apiUrl', apiUrlInput.value);
+        });
+
+        async function sendMessage() {
+            const message = messageInput.value.trim();
+            const apiUrl = apiUrlInput.value.trim();
+
+            if (!message) return;
+            if (!apiUrl) {
+                alert('Please enter your backend API URL');
+                return;
+            }
+
+            // Add user message
+            addMessage(message, 'user');
+            messageInput.value = '';
+            sendButton.disabled = true;
+
+            // Add loading indicator
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'message bot';
+            loadingDiv.innerHTML = `
+                <div class="message-content">
+                    <span class="loading"></span>
+                    <span class="loading"></span>
+                    <span class="loading"></span>
+                </div>
+            `;
+            chatMessages.appendChild(loadingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            try {
+                const response = await fetch(`${apiUrl}/chat`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        conversation_id: 'web-chat'
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+                
+                // Remove loading indicator
+                loadingDiv.remove();
+                
+                // Add bot response
+                addMessage(data.response, 'bot');
+            } catch (error) {
+                loadingDiv.remove();
+                addMessage('Error: Could not connect to backend. Please check your API URL.', 'bot');
+                console.error('Error:', error);
+            }
+
+            sendButton.disabled = false;
+            messageInput.focus();
+        }
+
+        function addMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            messageDiv.innerHTML = `<div class="message-content">${escapeHtml(text)}</div>`;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>
