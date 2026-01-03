@@ -167,6 +167,10 @@ async def chat(request: ChatRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.get("/health")
+async def health_check():
+    """Health check endpoint"""
+    return {"status": "healthy", "llm": "qwen2-math:7b", "database": "neo4j"}
 
 if __name__ == "__main__":
     import uvicorn
