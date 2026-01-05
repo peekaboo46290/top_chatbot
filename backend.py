@@ -151,12 +151,13 @@ Provide a clear, mathematically precise answer. If the theorems provided are rel
 async def chat(request: ChatRequest):
     """Main chat endpoint"""
     try:
-        # Query graph for relevant context
-        graph_context = query_graph(request.message)
+        # # Query graph for relevant context
+        # graph_context = query_graph(request.message)
         
-        # Generate response with LLM
-        response_text = generate_response(request.message, graph_context)
-        
+        # # Generate response with LLM
+        # response_text = generate_response(request.message, graph_context)
+        response_text = "watup"
+        graph_context = []
         return ChatResponse(
             response=response_text,
             sources=graph_context

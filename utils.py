@@ -9,7 +9,7 @@ from docling.document_converter import DocumentConverter
 from theorem import Theorem
 from example import Example
 from base_logger import logger
-
+from templates import templates
 converter = DocumentConverter()
 
 
