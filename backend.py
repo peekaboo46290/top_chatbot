@@ -27,13 +27,17 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[github_url],  
     allow_credentials=True,
-    allow_methods=[github_url],
-    allow_headers=[github_url],
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
+try:
+    neo4j_graph = Neo4jGraph(
+        url=neo4j_url, username=neo4j_username, password=neo4j_password, refresh_schema=False
+    )
+    logger.info("Connected to neo4j.")
+except Exception as e:
+    logger.info(f"Error in connecting to neo4j: {e}")
 
-neo4j_graph = Neo4jGraph(
-    url=neo4j_url, username=neo4j_username, password=neo4j_password, refresh_schema=False
-)
 
 class ChatRequest(BaseModel):
     message: str
@@ -121,14 +125,8 @@ def generate_response(message: str, context: List[Dict]) -> str:
         context_text += "\n"
     
     # Create prompt with mathematical context
-    prompt = f"""You are a mathematical assistant with expertise in formal mathematics.
+    prompt = f"""You are a mathematical assistant with access to a knowledge graph of theorems.
 
-When explaining theorems:
-- Use precise mathematical notation
-- Show step-by-step reasoning for proofs
-- Clarify assumptions and conditions
-- Connect related theorems logically
-- Use LaTeX notation when helpf
 Based on the following theorems from the knowledge graph, answer the user's question accurately and rigorously.
 
 Relevant Theorems:
