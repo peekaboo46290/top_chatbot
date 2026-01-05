@@ -133,6 +133,8 @@ body {
     cursor: not-allowed;
 }
 
+
+
 .loading {
     display: inline-block;
     width: 8px;
@@ -217,4 +219,11 @@ body {
 
 .cancel-btn {
     background: #e0e0e0;
+}
+
+.respond-settings{
+    margin-top: -15px;
+    padding-top: -15px;
+    padding-left: 20px;
+    padding-bottom: 5px;
 }
