@@ -141,7 +141,8 @@
             } catch (error) {
                 const messagesDiv = document.getElementById('chatMessages');
                 messagesDiv.removeChild(messagesDiv.lastChild);
-                addMessage('Error: Could not connect to backend. Please check settings.', false);
+                console.error('Connection error:', error);
+                addMessage(`Error: ${error.message || 'Could not connect to backend. Please check settings.'}`, false);
             }
             
             sendButton.disabled = false;
