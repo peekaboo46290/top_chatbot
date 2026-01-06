@@ -7,3 +7,7 @@ normalent mansit shyn
 
 i chose qwen2-math bc i saw it multiple compared too and i liked it score in "https://qwenlm.github.io/blog/qwen2-math/"
 changed to exaone-deep:7.8b bc qwen2 didnt want to work
+
+
+https://www.reddit.com/r/ollama/comments/1i1e9x2/best_practice_for_storing_chat_history_with/
+https://www.reddit.com/r/LocalLLM/comments/1lh8n6l/i_made_a_python_script_that_uses_your_local_llm/

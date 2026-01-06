@@ -5,13 +5,17 @@ import json
 from pydantic import BaseModel
 
 from langchain_neo4j import Neo4jGraph
+from langchain_ollama.llms import OllamaLLM
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import ollama
 
+
+from templates import templates
 from theorem import Theorem
 from base_logger import logger
 
+from chains import create_llm_chain
 
 load_dotenv(".env")
 
@@ -30,6 +34,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+
 try:
     neo4j_graph = Neo4jGraph(
         url=neo4j_url, username=neo4j_username, password=neo4j_password, refresh_schema=False
@@ -39,14 +46,14 @@ except Exception as e:
     logger.info(f"Error in connecting to neo4j: {e}")
 
 
+chat_history = ""
 class ChatRequest(BaseModel):
     message: str
     conversation_id: str = "default"
 
-class ChatResponse(BaseModel):
-    response: str
-    sources: List[Dict] = []
-
+class QueryResponse(BaseModel):
+    answer: str
+    sources: list
 
 def get_theorems_by_subject(subject: str, limit: int = 10) -> List[Dict[str, Any]]:
         query = """
@@ -75,98 +82,58 @@ def get_theorems_by_domain(domain: str, limit: int = 10) -> List[Dict[str, Any]]
         return result
 #add here some more get and move them
 
+def generate_respond(question:str, chat_history):
+    answer = ""
+    source = []
 
-def query_graph(query: str) -> List[Dict]:
-    """Query Neo4j graph database for relevant theorems"""
-    result = neo4j_graph.query("""
-        MATCH (t:Theorem)
-        WHERE toLower(t.name) CONTAINS toLower($query) 
-            OR toLower(t.statement) CONTAINS toLower($query)
-            OR toLower(t.subject) CONTAINS toLower($query)
-            OR toLower(t.domain) CONTAINS toLower($query)
-            OR toLower(t.type) CONTAINS toLower($query)
-        OPTIONAL MATCH (t)-[:DEPENDS_ON]->(dep:Theorem)
-        RETURN t.name as name, 
-                t.statement as statement, 
-                t.proof as proof,
-                t.subject as subject,
-                t.domain as domain,
-                t.type as type,
-                collect(DISTINCT dep.name) as dependencies
-        LIMIT 5
-    """, params={"query" : query})
-    
-    theorems = []
-    for record in result:
-        theorem = dict(record)
-        # Filter out empty dependencies
-        theorem['dependencies'] = [d for d in theorem.get('dependencies', []) if d]
-        theorems.append(theorem)
-        
-        return theorems
-
-
-def generate_response(message: str, context: List[Dict]) -> str:
-    """Generate response using Ollama with theorem context"""
-    
-    # Format theorem context
-    context_text = ""
-    for theorem in context:
-        context_text += f"\n**{theorem.get('type', 'Theorem')}: {theorem.get('name', 'Unknown')}**\n"
-        context_text += f"Subject: {theorem.get('subject', 'N/A')} ({theorem.get('domain', 'N/A')})\n"
-        context_text += f"Statement: {theorem.get('statement', 'N/A')}\n"
-        
-        if theorem.get('proof') and theorem.get('proof') != "Not provided":
-            context_text += f"Proof: {theorem.get('proof')}\n"
-        
-        deps = theorem.get('dependencies', [])
-        if deps:
-            context_text += f"Dependencies: {', '.join(deps)}\n"
-        context_text += "\n"
-    
-    # Create prompt with mathematical context
-    prompt = f"""You are a mathematical assistant with access to a knowledge graph of theorems.
-
-Based on the following theorems from the knowledge graph, answer the user's question accurately and rigorously.
-
-Relevant Theorems:
-{context_text}
-
-User Question: {message}
-
-Provide a clear, mathematically precise answer. If the theorems provided are relevant, reference them by name. If you need to explain connections between theorems, use their dependency relationships."""
-
-    # Call Ollama with qwen2-math
-    response = ollama.chat(
-        model=llm_name,
-        messages=[
-            {'role': 'system', 'content': 'You are a knowledgeable mathematical assistant. Provide rigorous and clear explanations with proper mathematical notation.'},
-            {'role': 'user', 'content': prompt}
-        ]
+    llm = create_llm_chain(
+        llm_name= llm_name,
+        ollama_base_url= ollama_base_url,
+        template= templates["parse_question"]
     )
-    
-    return response['message']['content']
 
-@app.post("/chat", response_model=ChatResponse)
-async def chat(request: ChatRequest):
-    """Main chat endpoint"""
-    try:
-        graph_context = query_graph(request.message)
-        
-        response_text = generate_response(request.message, graph_context)
-        
-        return ChatResponse(
-            response=response_text,
-            sources=graph_context
+    query = llm.invoke({"chat_history": chat_history, "question": question})
+    logger.info(query)
+
+    if query in ["No algebra", "whatever"]:
+        llm = create_llm_chain(
+            llm_name= llm_name,
+            ollama_base_url= ollama_base_url,
+            template= templates["answer_without_rag"]
         )
-    
+        answer = llm.invoke({"chat_history": chat_history, "question": question})
+    else:
+        Theorems = ''
+        llm = create_llm_chain(
+            llm_name= llm_name,
+            ollama_base_url= ollama_base_url,
+            template= templates["answer_with_rag"]
+        )
+        answer = llm.invoke({"chat_history": chat_history, "question": question, "theorems": Theorems})
+
+    return QueryResponse(
+        answer= answer,
+        sources= source
+    )
+
+
+@app.post("/api/query")
+async def process_query(request: ChatRequest):
+    try:
+        result = generate_respond.process(
+            question=request.query,
+            chat_history=chat_history
+        )
+        return QueryResponse(
+            answer=result["answer"],
+            sources=result["sources"]
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/health")
 async def health_check():
-    """Health check endpoint"""
-    return {"status": "healthy", "llm": "qwen2-math:7b", "database": "neo4j"}
+    return {"status": "healthy"}
 
 if __name__ == "__main__":
     import uvicorn

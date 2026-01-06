@@ -34,6 +34,7 @@ Text to analyze:
 {text}
 
 JSON response:""",
+
     "examples": """
 You are an expert mathematician. Extract all mathematical examples from the text below.
 
@@ -68,6 +69,46 @@ Rules:
 Text to analyze:
 {text}
 
-JSON response:"""
+JSON response:""",
 
+    "parse_question":"""
+You are a mathematical specialized in algebra assistant extract all theorem needed to answers the user from his question and his chat history.
+RETURN only the name of the theorem.
+
+chat history: {chat_history}
+
+question: {question}
+
+Rules: 
+1. Do not include any explanations or apologies in your responses.
+2. if the user isn't asking about algebra related question return "No algebra" 
+3. if the user isn't asking about specific theorem just return "whatever"
+4. Do not hallucinate.
+5. if multiple theorem needed to answer return them in a list with "theorem 1, theorem 2...
+6. if the user just asking for clarification return "No algebra" """,
+
+    "answer_with_rag":"""
+You are a mathematical specialized in algebra assistant with access to a knowledge graph of theorems.
+
+Based on the following theorems from the knowledge graph, answer the user's question accurately and rigorously.
+Relevant Theorems:
+{theorems}
+
+chat history: {chat_history}
+
+User Question: {message}
+
+Provide a clear, mathematically precise answer. If the theorems provided are relevant, reference them by name. If you need to explain connections between theorems, use their dependency relationships.""",
+
+    "answer_without_rag":"""
+You are a mathematical assistant.
+
+Based on the following chat history and user question answer the user's question accurately and rigorously.
+chat history:
+{chat_history}
+
+User Question: {question}
+
+Provide a clear, mathematically precise answer. If the theorems provided are relevant, reference them by name. If you need to explain connections between theorems, use their dependency relationships.
+"""
 }
