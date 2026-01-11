@@ -1,0 +1,44 @@
+2026-01-11 13:57:48,502 - base_logger - INFO - Connected to neo4j.
+2026-01-11 13:57:48,508 - werkzeug - WARNING -  * Debugger is active!
+2026-01-11 13:57:48,510 - werkzeug - INFO -  * Debugger PIN: 100-305-063
+2026-01-11 13:57:48,521 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 13:57:48] "OPTIONS /chat HTTP/1.1" 200 -
+2026-01-11 13:57:48,614 - base_logger - INFO - Received message: what fields of mathematics are you an expert in?
+2026-01-11 13:57:49,000 - base_logger - INFO - Loaded llm: qwen2-math:7b
+2026-01-11 13:57:49,322 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-01-11 13:57:49,383 - base_logger - INFO - 
+No algebra
+2026-01-11 13:57:49,766 - base_logger - INFO - Loaded llm: qwen2-math:7b
+2026-01-11 13:57:49,767 - base_logger - INFO - used answer_without_rag
+2026-01-11 13:57:49,871 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-01-11 13:57:51,271 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 13:57:51] "POST /chat HTTP/1.1" 200 -
+2026-01-11 13:58:44,903 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 13:58:44] "OPTIONS /chat HTTP/1.1" 200 -
+2026-01-11 13:58:45,033 - base_logger - INFO - Received message: write simple python code
+2026-01-11 13:58:45,422 - base_logger - INFO - Loaded llm: qwen2-math:7b
+2026-01-11 13:58:45,896 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-01-11 13:58:45,955 - base_logger - INFO - 
+No algebra
+2026-01-11 13:58:46,344 - base_logger - INFO - Loaded llm: qwen2-math:7b
+2026-01-11 13:58:46,345 - base_logger - INFO - used answer_without_rag
+2026-01-11 13:58:46,455 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-01-11 13:58:48,030 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 13:58:48] "POST /chat HTTP/1.1" 200 -
+2026-01-11 13:59:06,681 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 13:59:06] "OPTIONS /chat HTTP/1.1" 200 -
+2026-01-11 13:59:06,767 - base_logger - INFO - Received message: give ma therem
+2026-01-11 13:59:07,174 - base_logger - INFO - Loaded llm: qwen2-math:7b
+2026-01-11 13:59:07,497 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-01-11 13:59:07,557 - base_logger - INFO - 
+No algebra
+2026-01-11 13:59:07,941 - base_logger - INFO - Loaded llm: qwen2-math:7b
+2026-01-11 13:59:07,942 - base_logger - INFO - used answer_without_rag
+2026-01-11 13:59:08,042 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-01-11 13:59:08,601 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 13:59:08] "POST /chat HTTP/1.1" 200 -
+2026-01-11 13:59:21,141 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 13:59:21] "OPTIONS /chat HTTP/1.1" 200 -
+2026-01-11 13:59:21,221 - base_logger - INFO - Received message: random theorem
+2026-01-11 13:59:21,621 - base_logger - INFO - Loaded llm: qwen2-math:7b
+2026-01-11 13:59:21,890 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-01-11 13:59:21,949 - base_logger - INFO - 
+No algebra
+2026-01-11 13:59:22,354 - base_logger - INFO - Loaded llm: qwen2-math:7b
+2026-01-11 13:59:22,354 - base_logger - INFO - used answer_without_rag
+2026-01-11 13:59:22,459 - httpx - INFO - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2026-01-11 13:59:25,033 - werkzeug - INFO - 127.0.0.1 - - [11/Jan/2026 13:59:25] "POST /chat HTTP/1.1" 200 -
+2026-01-11 14:00:32,056 - werkzeug - INFO -  * Detected change in 'c:\\Users\\natso\\Documents\\top_chatbot\\backend.py', reloading

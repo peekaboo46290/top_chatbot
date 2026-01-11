@@ -115,7 +115,7 @@ Rules:
 Provide a clear, mathematically precise answer. If the theorems provided are relevant, reference them by name. If you need to explain connections between theorems, use their dependency relationships.""",
 
     "answer_without_rag":"""
-You are a mathematical assistant.
+You are a mathematical specialized in algebra assistant.
 
 Based on the following chat history and user question answer the user's question accurately and rigorously.
 chat history:

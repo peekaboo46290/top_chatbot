@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GraphRAG Chatbot</title>
+    <link rel="icon" href="math-book.png">
+    <title>Algebra Chatbot</title>
     <link rel="stylesheet" href="stylesheet.css">
 </head>
 <body>
@@ -49,7 +50,7 @@
     </div>
 
     <script>
-        let API_URL = localStorage.getItem('backendUrl') || 'http://localhost:8000';
+        let API_URL = localStorage.getItem('backendUrl') || 'https://collative-tanika-uncriticisable.ngrok-free.dev';
         
         // Remove trailing slash if present
         API_URL = API_URL.replace(/\/$/, '');
@@ -90,10 +91,6 @@
             
             let html = `<div class="message-content">${content}`;
             
-            if (sources && sources.length > 0) {
-                html += `<div class="sources">📚 Sources: ${sources.map(s => s.name || 'Knowledge Graph').join(', ')}</div>`;
-            }
-            
             html += `</div>`;
             messageDiv.innerHTML = html;
             
@@ -131,7 +128,7 @@
                 
                 if (response.ok) {
                     const data = await response.json();
-                    addMessage(data.response, false, data.sources);
+                    addMessage(data.response.slice(1), false, data.sources);
                 } else {
                     addMessage('Sorry, I encountered an error. Please check your backend connection.', false);
                 }

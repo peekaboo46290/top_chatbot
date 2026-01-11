@@ -6,6 +6,8 @@ from pydantic import BaseModel
 
 from langchain_neo4j import Neo4jGraph
 from langchain_ollama.llms import OllamaLLM
+from flask import Flask, request, jsonify
+from flask_cors import CORS
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import ollama
@@ -26,15 +28,15 @@ github_url = os.getenv("Github_URL")
 ollama_base_url = os.getenv("OLLAMA_BASE_URL")
 llm_name = os.getenv("CHAT_LLM")
 
-app = FastAPI()
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[github_url],  
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+app = Flask(__name__)
 
+CORS(app, resources={
+    r"/*": {
+        "origins": "*",
+        "methods": ["GET", "POST", "OPTIONS"],
+        "allow_headers": ["Content-Type"]
+    }
+})
 
 
 try:
@@ -112,30 +114,48 @@ def generate_respond(question:str, chat_history= chat_history, use_chat_history 
         answer = llm.invoke({"chat_history": chat_history, "question": question, "theorems": theorems})
     if use_chat_history:
         chat_history += question + "\n" + answer + "\n"
-    return answer
+    return answer, theorems
     
 
 
-# @app.post("/chat", response_model=ChatResponse)
-# async def process_query(request: ChatRequest):
-#     try:
-#         result = generate_respond(
-#             question=request.query
-#         )
-#         return QueryResponse(
-#             answer=result["answer"],
-#             sources=result["sources"]
-#         )
-#     except Exception as e:
-#         raise HTTPException(status_code=500, detail=str(e))
+@app.route('/health', methods=['GET'])
+def health_check():
+    """Health check endpoint"""
+    return jsonify({
+        "status": "healthy",
+        "llm": "qwen2-math:7b",
+        "database": "neo4j"
+    })
 
-# @app.get("/health")
-# async def health_check():
-#     return {"status": "healthy"}
+@app.route('/chat', methods=['POST'])
+def chat():
+    try:
+        data = request.get_json()
+        
+        if not data or 'message' not in data:
+            logger.info("No message provided")
+            return jsonify({"error": "No message provided"}), 400
+        
+        message = data['message']
+        
+        logger.info(f"Received message: {message}")
+        
+        answer, theorem = generate_respond(message, use_chat_history= False)
+        print(f"Generated response")
+        
+        return jsonify({
+            "response": answer,
+            "sources": theorem
+        })
+    
+    except Exception as e:
+        logger.info(f"ERROR: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+@app.teardown_appcontext
+def close_db(error):
+    if error:
+        logger.info(f"App error: {error}")
 
 if __name__ == "__main__":
-    while True:
-        inp = input(">>")
-        print(generate_respond(inp))
-    # import uvicorn
-    # uvicorn.run(app, host="0.0.0.0", port=8000)
+    app.run(host='0.0.0.0', port=8000, debug=True)
